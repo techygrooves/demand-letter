@@ -12,6 +12,8 @@ Built with [Astro](https://astro.build) as a fully static site: no server runtim
 | `npm run dev`     | Start the dev server at `localhost:4321`        |
 | `npm run build`   | Type-check and build the static site to `dist/` |
 | `npm run preview` | Preview the production build locally            |
+| `npm test`        | Unit tests (Vitest): intake validation and submission |
+| `npm run test:e2e`| Browser tests (Playwright): full intake flow, desktop and mobile, plus an axe accessibility scan |
 
 ## Project structure
 
@@ -30,6 +32,32 @@ src/
 ```
 
 Most content changes, such as the phone number, the price or the list of what's included, only require editing `src/config/site.ts`.
+
+## Intake form
+
+The multi-step request form lives at `/get-started/`.
+
+| File | Purpose |
+| --- | --- |
+| `src/config/intake.ts` | Dispute options, states, character limits, step titles |
+| `src/lib/intake/validation.ts` | Field rules (pure functions, unit tested) |
+| `src/lib/intake/summary.ts` | Review screen and plain-text summaries |
+| `src/lib/intake/submit.ts` | Submission providers and spam screening |
+| `src/components/intake/` | Form markup and styles |
+| `src/scripts/intake-form.ts` | Step navigation, errors, focus, draft saving |
+
+**Submission is not connected to a backend yet.** By default the form tells the visitor plainly that their
+request has *not* been sent and offers "Email My Request" (opens their email app with the answers filled in)
+and the phone number. To deliver submissions, set at build time:
+
+```
+PUBLIC_INTAKE_PROVIDER=endpoint
+PUBLIC_INTAKE_ENDPOINT=https://…   # a form service (e.g. Formspree, Basin) or the firm's own handler
+```
+
+The endpoint receives JSON (`data`, `summary`, `submittedAt`, `source`, `spam`). Only a 2xx response is shown to
+the visitor as "received". The client-side spam checks (hidden honeypot field, minimum fill time) should be
+repeated by the backend. See `.env.example`.
 
 ## Deploying to Hostinger
 

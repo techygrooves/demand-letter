@@ -1,9 +1,9 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHero from '@/components/PageHero.astro';
-import ContactOptions from '@/components/ContactOptions.astro';
+import IntakeForm from '@/components/intake/IntakeForm.astro';
 import Icon from '@/components/Icon.astro';
-import { offer, steps } from '@/config/site';
+import { firm, offer, steps } from '@/config/site';
 ---
 
 <BaseLayout
@@ -11,128 +11,133 @@ import { offer, steps } from '@/config/site';
   description={`Start your request for an attorney-prepared demand letter from Hoffman Legal. ${offer.payment.noUpfront} ${offer.payment.suitability}`}
 >
   <PageHero eyebrow={`${offer.priceDisplay} Fixed Fee`} title="Start Your Demand Letter Request">
-    Tell us about your dispute. {offer.payment.noUpfront} {offer.payment.suitability}
+    Tell us about your dispute in a few short steps. {offer.payment.noUpfront} {offer.payment.suitability}
   </PageHero>
 
-  <section class="section" aria-labelledby="request-title">
+  <section class="section request-section" aria-label="Demand letter request form">
     <div class="container request">
-      <div>
-        <!-- TODO: Replace with the online intake form (Step 1) in a later step. -->
-        <h2 id="request-title" class="request__title">Submit your request</h2>
-        <p class="request__intro">
-          Contact the firm with a brief description of the dispute, the opposing party and the resolution you want.
-        </p>
-        <ContactOptions />
-        <p class="request__note">
-          Please do not send confidential information until an attorney-client relationship has been established.
-        </p>
+      <div class="request__form">
+        <IntakeForm />
       </div>
 
-      <aside class="request__next" aria-labelledby="next-title">
-        <h2 id="next-title" class="request__next-title">What happens next</h2>
-        <ol role="list">
-          {
-            steps.map((step, index) => (
-              <li>
-                <span class="request__num" aria-hidden="true">
-                  {index + 1}
-                </span>
-                <div>
-                  <strong>{step.title}</strong>
-                  <p>{step.text}</p>
-                </div>
-              </li>
-            ))
-          }
-        </ol>
-        <p class="request__payment">
-          <Icon name="lock" size={18} />
-          {offer.payment.headline}
-        </p>
+      <aside class="request__aside" aria-labelledby="next-title">
+        <div class="request__card">
+          <h2 id="next-title" class="request__card-title">What happens next</h2>
+          <ol role="list">
+            {
+              steps.map((step, index) => (
+                <li>
+                  <span class="request__num" aria-hidden="true">
+                    {index + 1}
+                  </span>
+                  <div>
+                    <strong>{step.title}</strong>
+                    <p>{step.text}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+          <p class="request__payment">
+            <Icon name="lock" size={18} />
+            {offer.payment.headline}
+          </p>
+        </div>
+
+        <div class="request__card request__card--contact">
+          <h2 class="request__card-title">Prefer to talk?</h2>
+          <p>
+            <a href={firm.phone.href}><Icon name="phone" size={16} /> {firm.phone.display}</a>
+          </p>
+          <p>
+            <a href={`mailto:${firm.email}`}><Icon name="mail" size={16} /> {firm.email}</a>
+          </p>
+        </div>
       </aside>
     </div>
   </section>
 </BaseLayout>
 
 <style>
+  .request-section {
+    padding-top: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+  }
+
   .request {
     display: grid;
-    gap: var(--space-8);
+    gap: var(--space-7);
     align-items: start;
   }
 
   @media (min-width: 64rem) {
     .request {
-      grid-template-columns: 1.4fr 1fr;
+      grid-template-columns: minmax(0, 1fr) 20rem;
+    }
+
+    .request__aside {
+      position: sticky;
+      top: calc(var(--header-height) + var(--space-5));
     }
   }
 
-  .request__title {
-    font-size: var(--text-2xl);
+  .request__aside {
+    display: grid;
+    gap: var(--space-5);
   }
 
-  .request__intro {
-    margin: var(--space-3) 0 var(--space-6);
-    color: var(--color-text-muted);
-  }
-
-  .request__note {
-    margin-top: var(--space-5);
-    font-size: var(--text-xs);
-    color: var(--color-text-muted);
-  }
-
-  .request__next {
-    padding: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
+  .request__card {
+    padding: var(--space-6);
     border: 1px solid var(--color-line);
     border-radius: var(--radius-lg);
     background: var(--color-stone);
   }
 
-  .request__next-title {
-    font-size: var(--text-xl);
+  .request__card-title {
+    font-size: var(--text-lg);
   }
 
-  .request__next ol {
+  .request__card ol {
     display: grid;
-    gap: var(--space-5);
-    margin-top: var(--space-5);
+    gap: var(--space-4);
+    margin-top: var(--space-4);
     padding: 0;
   }
 
-  .request__next li {
+  .request__card li {
     display: flex;
-    gap: var(--space-4);
+    gap: var(--space-3);
   }
 
   .request__num {
     display: inline-grid;
     flex-shrink: 0;
     place-items: center;
-    width: 2rem;
-    height: 2rem;
+    width: 1.75rem;
+    height: 1.75rem;
     border: 1px solid var(--color-brass-500);
     border-radius: 50%;
     font-family: var(--font-serif);
+    font-size: var(--text-sm);
     color: var(--color-brass-700);
   }
 
-  .request__next strong {
+  .request__card strong {
+    font-size: var(--text-sm);
     color: var(--color-navy-900);
   }
 
-  .request__next p {
+  .request__card li p {
     margin-top: var(--space-1);
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
     color: var(--color-text-muted);
   }
 
   .request__payment {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
-    margin-top: var(--space-6);
-    padding-top: var(--space-5);
+    gap: var(--space-2);
+    margin-top: var(--space-5);
+    padding-top: var(--space-4);
     border-top: 1px solid var(--color-line-strong);
     font-size: var(--text-sm);
     font-weight: 600;
@@ -141,5 +146,32 @@ import { offer, steps } from '@/config/site';
 
   .request__payment :global(svg) {
     color: var(--color-brass-600);
+  }
+
+  .request__card--contact {
+    background: var(--color-surface);
+  }
+
+  .request__card--contact p {
+    margin-top: var(--space-3);
+  }
+
+  .request__card--contact a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .request__card--contact :global(svg) {
+    color: var(--color-brass-600);
+  }
+
+  /* On small screens, show the form first and the side panel after it. */
+  @media (max-width: 63.999rem) {
+    .request__aside {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    }
   }
 </style>
