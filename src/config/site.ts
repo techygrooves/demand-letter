@@ -26,7 +26,7 @@ export const firm = {
 } as const;
 
 export const site = {
-  title: 'Attorney Demand Letters in Florida | $500 Flat Fee | Hoffman Legal',
+  title: 'Florida Demand Letter Attorney | $500 Flat Fee | Hoffman Legal',
   shortTitle: 'Demand Letters',
   description:
     'Attorney-prepared demand letters for a $500 flat fee. Hoffman Legal prepares individualized demand letters on firm letterhead for unpaid debts, contract breaches, deposits, property damage and other Florida civil disputes.',
