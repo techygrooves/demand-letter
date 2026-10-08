@@ -266,6 +266,45 @@ test.describe('intake form', () => {
   });
 });
 
+test.describe('default Formspree delivery', () => {
+  test('submits labelled fields to the firm’s Formspree form and confirms receipt', async ({ page }) => {
+    let body: Record<string, string> | undefined;
+    let accept = '';
+    await page.route('https://formspree.io/**', async (route) => {
+      body = route.request().postDataJSON();
+      accept = route.request().headers()['accept'] ?? '';
+      await route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' });
+    });
+
+    await open(page, 'http://localhost:4323/get-started/');
+    await reachReview(page);
+    await page.getByRole('checkbox', { name: 'I have read and understand these statements.', exact: true }).check();
+    await waitForMinFillTime(page);
+    await submit(page).click();
+
+    await expect(page.locator('[data-outcome="delivered"]')).toBeVisible();
+    expect(page.url()).toContain('/get-started/');
+    expect(accept).toContain('application/json');
+    expect(body?._subject).toBe('Demand letter request: Jane Client');
+    expect(body?._replyto).toBe('jane@example.com');
+    expect(body?.['Opposing party']).toBe('Acme Roofing LLC');
+    expect(body?.['Dispute type']).toBe('Contractor or construction issue');
+  });
+
+  test('shows the recoverable error if Formspree rejects the submission', async ({ page }) => {
+    await page.route('https://formspree.io/**', (route) =>
+      route.fulfill({ status: 422, contentType: 'application/json', body: '{"errors":[{"message":"bad"}]}' }),
+    );
+    await open(page, 'http://localhost:4323/get-started/');
+    await reachReview(page);
+    await page.getByRole('checkbox', { name: 'I have read and understand these statements.', exact: true }).check();
+    await waitForMinFillTime(page);
+    await submit(page).click();
+    await expect(page.locator('[data-submit-error]')).toBeVisible();
+    await expect(page.locator('[data-outcome="delivered"]')).toBeHidden();
+  });
+});
+
 test.describe('accessibility', () => {
   test('each step and the result screen have no detectable WCAG A/AA violations', async ({ page }) => {
     const { default: AxeBuilder } = await import('@axe-core/playwright');

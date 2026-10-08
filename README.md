@@ -57,9 +57,9 @@ The multi-step request form lives at `/get-started/`.
 | `src/components/intake/` | Form markup and styles |
 | `src/scripts/intake-form.ts` | Step navigation, errors, focus, draft saving |
 
-**Submission is not connected to a backend yet.** By default the form tells the visitor plainly that their
-request has *not* been sent and offers "Email My Request" (opens their email app with the answers filled in)
-and the phone number. To deliver submissions, set at build time:
+**Submissions are delivered through Formspree** (`submission` in `src/config/intake.ts`), sent as labelled fields
+with the client's email as reply-to. If delivery fails, the visitor sees an error with the firm's phone and email; the
+answers are kept. To use a different backend, set at build time (overrides the default):
 
 ```
 PUBLIC_INTAKE_PROVIDER=endpoint

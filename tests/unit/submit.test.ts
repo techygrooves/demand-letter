@@ -64,3 +64,57 @@ describe('spam screening', () => {
     expect(outcome.status).not.toBe('delivered');
   });
 });
+
+describe('formspree provider', async () => {
+  const { formspreeBody, formspreeProvider } = await import('@/lib/intake/submit');
+  const { submission } = await import('@/config/intake');
+
+  const data = {
+    ...emptyIntake(),
+    fullName: 'Jane Client',
+    email: 'jane@example.com',
+    phone: '9545550123',
+    disputeState: 'FL',
+    disputeType: 'unpaid-debt',
+    opposingParty: 'Acme LLC',
+    description: 'They owe me for work completed in March and have stopped responding.',
+    resolution: 'Payment of $2,500.',
+    hasDeadline: 'no',
+    acknowledgment: true,
+  };
+  const formPayload = buildPayload(data, human, '/get-started/');
+
+  it('is the default delivery method, pointing at the firm’s Formspree form', () => {
+    expect(submission.provider).toBe('formspree');
+    expect(resolveProvider({ provider: submission.provider, endpoint: submission.endpoint }).name).toBe('formspree');
+  });
+
+  it('only accepts genuine Formspree form URLs', () => {
+    expect(resolveProvider({ provider: 'formspree', endpoint: 'https://evil.test/f/abc' }).name).toBe('none');
+    expect(resolveProvider({ provider: 'formspree', endpoint: 'http://formspree.io/f/abc' }).name).toBe('none');
+  });
+
+  it('sends readable labelled fields with reply-to and subject', () => {
+    const body = formspreeBody(formPayload);
+    expect(body._subject).toBe('Demand letter request: Jane Client');
+    expect(body.email).toBe('jane@example.com');
+    expect(body._replyto).toBe('jane@example.com');
+    expect(body._gotcha).toBe('');
+    expect(body['Phone']).toBe('(954) 555-0123');
+    expect(body['State where the dispute arose']).toBe('Florida');
+    expect(body['Dispute type']).toBe('Unpaid debt or money owed');
+    expect(body['Resolution sought']).toBe('Payment of $2,500.');
+    expect(body['Acknowledged inquiry terms']).toBe('Yes');
+    expect(Object.values(body).every((v) => typeof v === 'string')).toBe(true);
+  });
+
+  it('reports delivered only when Formspree accepts the submission', async () => {
+    const ok = vi.fn().mockResolvedValue(new Response('{"ok":true}', { status: 200 }));
+    expect(await formspreeProvider(submission.endpoint, 1000, ok).submit(formPayload)).toEqual({ status: 'delivered' });
+    expect(ok.mock.calls[0][0]).toBe('https://formspree.io/f/xbgdoylb');
+    expect(ok.mock.calls[0][1].headers.Accept).toBe('application/json');
+
+    const rejected = vi.fn().mockResolvedValue(new Response('{"errors":[]}', { status: 422 }));
+    expect((await formspreeProvider(submission.endpoint, 1000, rejected).submit(formPayload)).status).toBe('error');
+  });
+});
