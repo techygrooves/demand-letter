@@ -1,57 +1,154 @@
 ---
 import Icon from '@/components/Icon.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
-import { disputeTypes } from '@/config/site';
+import { disputeTypes, disputeNotices, offer, firm, cta } from '@/config/site';
 
 interface Props {
-  /** Where the "not sure" link points. Use '#contact' on pages with a contact section. */
-  contactHref?: string;
+  /** Hide the heading when a page hero already introduces the topic. */
+  showHeading?: boolean;
   tone?: 'default' | 'stone';
 }
 
-const { contactHref = '/contact/', tone = 'stone' } = Astro.props;
+const { showHeading = true, tone = 'stone' } = Astro.props;
+
+const categories = disputeTypes.filter((item) => !('other' in item));
+const other = disputeTypes.find((item) => 'other' in item);
 ---
 
 <section
-  class:list={['section', { 'section--stone': tone === 'stone' }]}
-  id="situations"
-  aria-labelledby="situations-title"
+  class:list={['section', 'disputes-section', { 'section--stone': tone === 'stone' }]}
+  id="disputes"
+  aria-labelledby="disputes-title"
 >
   <div class="container">
-    <SectionHeading
-      eyebrow="Common Situations"
-      title="Where a demand letter may help"
-      id="situations-title"
-    >
-      Hoffman Legal prepares demand letters for a wide range of civil disputes involving individuals and businesses.
-      These are some of the most common.
-    </SectionHeading>
+    <div class="disputes__head">
+      {
+        showHeading ? (
+          <SectionHeading eyebrow="Types of Disputes" title="Types of Disputes We Handle" id="disputes-title">
+            Hoffman Legal prepares demand letters across a wide range of civil disputes. The fee is {offer.priceDisplay}
+            for one suitable demand letter, subject to attorney review and acceptance.
+          </SectionHeading>
+        ) : (
+          <h2 id="disputes-title" class="visually-hidden">
+            Dispute categories
+          </h2>
+        )
+      }
+      <p class="disputes__assessment">
+        <Icon name="info" size={20} />
+        <span>
+          <strong>{disputeNotices.assessment}</strong> The categories below are examples, not a guarantee that a
+          particular matter qualifies.
+        </span>
+      </p>
+    </div>
 
     <ul class="disputes reveal" role="list">
       {
-        disputeTypes.map((item) => (
+        categories.map((item, index) => (
           <li class="dispute">
-            <span class="dispute__icon">
-              <Icon name={item.icon} size={24} />
-            </span>
+            <div class="dispute__top">
+              <span class="dispute__icon">
+                <Icon name={item.icon} size={24} />
+              </span>
+              <span class="dispute__num" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+            </div>
             <h3>{item.title}</h3>
             <p>{item.text}</p>
           </li>
         ))
       }
+      {
+        other && (
+          <li class="dispute dispute--other">
+            <span class="dispute__icon">
+              <Icon name={other.icon} size={24} />
+            </span>
+            <div>
+              <h3>{other.title}</h3>
+              <p>{other.text}</p>
+            </div>
+          </li>
+        )
+      }
     </ul>
 
-    <div class="disputes__note">
-      <p>
-        <strong>Don’t see your situation?</strong> Many other civil disputes may also be a good fit. Each matter is
-        reviewed to confirm that a demand letter is an appropriate next step.
-      </p>
-      <a href={contactHref} class="btn btn--outline">Discuss Your Situation</a>
+    <aside class="disputes__notice" aria-labelledby="disputes-notice-title">
+      <h3 id="disputes-notice-title" class="disputes__notice-title">Please note</h3>
+      <ul role="list">
+        {
+          disputeNotices.items.map((item) => (
+            <li>
+              <Icon name="dash" size={16} />
+              <span>{item}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </aside>
+
+    <div class="disputes__cta">
+      <div class="disputes__cta-copy">
+        <h3 class="disputes__cta-title">Don’t See Your Dispute Listed? Tell Us About Your Situation.</h3>
+        <p>
+          Many civil disputes may be suitable for a demand letter. Share the details and the attorney will assess whether
+          your matter is a fit. {offer.payment.noUpfront}
+        </p>
+      </div>
+      <div class="disputes__cta-actions">
+        <a href={cta.request.href} class="btn btn--accent btn--lg">
+          Tell Us About Your Situation
+          <Icon name="arrow" size={18} />
+        </a>
+        <a href={firm.phone.href} class="disputes__cta-phone">
+          <Icon name="phone" size={18} />
+          Or call {firm.phone.display}
+        </a>
+      </div>
     </div>
   </div>
 </section>
 
 <style>
+  .disputes__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-5) var(--space-7);
+    margin-bottom: var(--space-7);
+  }
+
+  .disputes__head :global(.section-heading) {
+    margin-bottom: 0;
+  }
+
+  .disputes__assessment {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    max-width: 26rem;
+    padding: var(--space-4) var(--space-5);
+    border: 1px solid var(--color-brass-500);
+    border-radius: var(--radius-md);
+    background: #fdfaf3;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .disputes__assessment strong {
+    color: var(--color-navy-900);
+  }
+
+  .disputes__assessment :global(svg) {
+    flex-shrink: 0;
+    margin-top: 0.1em;
+    color: var(--color-brass-700);
+  }
+
+  /* ---------- Cards ---------- */
   .disputes {
     display: grid;
     gap: var(--space-4);
@@ -66,7 +163,7 @@ const { contactHref = '/contact/', tone = 'stone' } = Astro.props;
 
   @media (min-width: 64rem) {
     .disputes {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: var(--space-5);
     }
   }
@@ -103,7 +200,7 @@ const { contactHref = '/contact/', tone = 'stone' } = Astro.props;
 
   @media (hover: hover) {
     .dispute:hover {
-      transform: translateY(-3px);
+      transform: translateY(-4px);
       border-color: var(--color-line-strong);
       box-shadow: var(--shadow-md);
     }
@@ -116,14 +213,25 @@ const { contactHref = '/contact/', tone = 'stone' } = Astro.props;
       background: var(--color-navy-900);
       color: var(--color-brass-500);
     }
+
+    .dispute:hover .dispute__num {
+      color: var(--color-brass-500);
+    }
+  }
+
+  .dispute__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: var(--space-2);
   }
 
   .dispute__icon {
     display: inline-grid;
+    flex-shrink: 0;
     place-items: center;
     width: 3rem;
     height: 3rem;
-    margin-bottom: var(--space-2);
     border-radius: 50%;
     background: var(--color-brass-100);
     color: var(--color-brass-700);
@@ -132,21 +240,12 @@ const { contactHref = '/contact/', tone = 'stone' } = Astro.props;
       color var(--duration) var(--ease);
   }
 
-  @media (max-width: 35.999rem) {
-    .dispute {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      column-gap: var(--space-4);
-      row-gap: var(--space-1);
-      padding: var(--space-5);
-    }
-
-    .dispute__icon {
-      grid-row: span 2;
-      width: 2.5rem;
-      height: 2.5rem;
-      margin-bottom: 0;
-    }
+  .dispute__num {
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    line-height: 1;
+    color: var(--color-line-strong);
+    transition: color var(--duration) var(--ease);
   }
 
   .dispute h3 {
@@ -154,29 +253,176 @@ const { contactHref = '/contact/', tone = 'stone' } = Astro.props;
   }
 
   .dispute p {
-    color: var(--color-text-muted);
     font-size: var(--text-sm);
+    color: var(--color-text-muted);
   }
 
-  .disputes__note {
-    display: flex;
-    flex-wrap: wrap;
+  /* "Other civil disputes" spans the full row with a lighter, open treatment. */
+  .dispute--other {
+    flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-4) var(--space-6);
+    gap: var(--space-5);
+    border-style: dashed;
+    border-color: var(--color-line-strong);
+    background: transparent;
+  }
+
+  .dispute--other p {
+    max-width: 48rem;
+    margin-top: var(--space-2);
+  }
+
+  @media (min-width: 36rem) {
+    .dispute--other {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* Compact horizontal cards on small phones. */
+  @media (max-width: 35.999rem) {
+    .dispute:not(.dispute--other) {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      column-gap: var(--space-4);
+      row-gap: var(--space-1);
+      padding: var(--space-5);
+    }
+
+    .dispute__top {
+      grid-row: span 2;
+      margin-bottom: 0;
+    }
+
+    .dispute__num {
+      display: none;
+    }
+
+    .dispute__icon {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    .dispute--other {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: var(--space-5);
+    }
+  }
+
+  /* ---------- Notice ---------- */
+  .disputes__notice {
     margin-top: var(--space-6);
     padding: var(--space-5) var(--space-6);
-    border: 1px dashed var(--color-line-strong);
-    border-radius: var(--radius-md);
+    border-left: 2px solid var(--color-brass-500);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    background: rgb(255 255 255 / 0.55);
   }
 
-  .disputes__note p {
-    flex: 1 1 28rem;
+  .disputes__notice-title {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-navy-900);
+  }
+
+  .disputes__notice ul {
+    display: grid;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    padding: 0;
+    list-style: none;
     font-size: var(--text-sm);
     color: var(--color-text-muted);
   }
 
-  .disputes__note strong {
-    color: var(--color-navy-900);
+  .disputes__notice li {
+    display: flex;
+    gap: var(--space-3);
+  }
+
+  .disputes__notice :global(svg) {
+    flex-shrink: 0;
+    margin-top: 0.2em;
+    color: var(--color-brass-700);
+  }
+
+  /* ---------- CTA ---------- */
+  .disputes__cta {
+    display: grid;
+    gap: var(--space-6);
+    align-items: center;
+    margin-top: var(--space-7);
+    padding: clamp(1.75rem, 1.2rem + 2.5vw, 3.5rem);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(40rem 20rem at 100% 100%, rgb(184 149 90 / 0.22), transparent 60%),
+      var(--color-navy-900);
+    color: var(--color-text-inverse);
+  }
+
+  @media (min-width: 64rem) {
+    .disputes__cta {
+      grid-template-columns: 1fr auto;
+      gap: var(--space-8);
+    }
+  }
+
+  .disputes__cta-title {
+    max-width: 24ch;
+    font-size: var(--text-2xl);
+    color: var(--color-text-inverse);
+  }
+
+  .disputes__cta-copy p {
+    max-width: 40rem;
+    margin-top: var(--space-3);
+    color: var(--color-text-inverse-muted);
+  }
+
+  .disputes__cta-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+  }
+
+  .disputes__cta-actions .btn {
+    white-space: normal;
+  }
+
+  .disputes__cta-actions .btn :global(svg) {
+    transition: transform var(--duration) var(--ease);
+  }
+
+  .disputes__cta-actions .btn:hover :global(svg) {
+    transform: translateX(3px);
+  }
+
+  .disputes__cta-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-text-inverse);
+    text-decoration: none;
+  }
+
+  .disputes__cta-phone:hover {
+    color: var(--color-brass-500);
+    text-decoration: underline;
+  }
+
+  .disputes__cta-phone :global(svg) {
+    color: var(--color-brass-500);
+  }
+
+  @media (max-width: 30rem) {
+    .disputes__cta-actions,
+    .disputes__cta-actions .btn {
+      width: 100%;
+    }
   }
 </style>
