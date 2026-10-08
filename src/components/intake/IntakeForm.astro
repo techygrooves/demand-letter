@@ -1,0 +1,914 @@
+---
+/**
+ * Multi-step client intake form. Behaviour lives in src/scripts/intake-form.ts;
+ * validation and submission in src/lib/intake/.
+ */
+import IntakeField from './IntakeField.astro';
+import Icon from '@/components/Icon.astro';
+import { disputeOptions, deadlineOptions, usStates, limits, steps } from '@/config/intake';
+import { firm, offer } from '@/config/site';
+
+const stateOptions = usStates.map(([value, label]) => ({ value, label }));
+---
+
+<div class="intake" data-intake>
+  <noscript>
+    <div class="intake__noscript">
+      <p>
+        <strong>The online request form needs JavaScript.</strong> Please call
+        <a href={firm.phone.href}>{firm.phone.display}</a> or email <a href={`mailto:${firm.email}`}>{firm.email}</a>
+        with a brief description of your dispute.
+      </p>
+    </div>
+  </noscript>
+
+  <div class="intake__shell" data-shell>
+    <!-- Progress -->
+    <div class="progress" role="group" aria-label="Form progress">
+      <p class="progress__count" data-progress-count>Step 1 of {steps.length}</p>
+      <div class="progress__bar" aria-hidden="true"><span data-progress-bar></span></div>
+      <ol class="progress__steps" role="list">
+        {
+          steps.map((step, index) => (
+            <li class="progress__step" data-progress-step={index} aria-current={index === 0 ? 'step' : undefined}>
+              <span class="progress__dot" aria-hidden="true">
+                <span class="progress__num">{index + 1}</span>
+                <Icon name="check" size={14} class="progress__check" />
+              </span>
+              <span class="progress__label">
+                <span class="progress__label-full">{step.title}</span>
+                <span class="progress__label-short">{step.short}</span>
+                <span class="visually-hidden" data-progress-state></span>
+              </span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <p class="visually-hidden" aria-live="polite" data-announcer></p>
+
+    <form class="intake__form" data-form novalidate>
+      <div class="error-summary" data-error-summary tabindex="-1" hidden>
+        <h3 class="error-summary__title">
+          <Icon name="info" size={20} />
+          Please correct the following:
+        </h3>
+        <ul role="list" data-error-list></ul>
+      </div>
+
+      <!-- Step 1: Contact details -->
+      <section class="step" data-step="0" aria-labelledby="step-0-title">
+        <header class="step__head">
+          <h2 class="step__title" id="step-0-title" tabindex="-1">{steps[0].title}</h2>
+          <p class="step__intro">How should Hoffman Legal contact you about your request?</p>
+        </header>
+        <div class="step__grid">
+          <IntakeField name="fullName" label="Full name" required autocomplete="name" maxlength={limits.name} />
+          <IntakeField
+            name="email"
+            label="Email address"
+            type="email"
+            required
+            autocomplete="email"
+            inputmode="email"
+            maxlength={limits.email}
+          />
+          <IntakeField
+            name="phone"
+            label="Phone number"
+            type="tel"
+            required
+            autocomplete="tel"
+            inputmode="tel"
+            maxlength={limits.phone}
+            placeholder="(954) 555-0123"
+          />
+          <IntakeField
+            name="disputeState"
+            label="State where the dispute arose"
+            as="select"
+            required
+            options={stateOptions}
+          />
+        </div>
+      </section>
+
+      <!-- Step 2: Dispute type -->
+      <section class="step" data-step="1" aria-labelledby="step-1-title" hidden>
+        <header class="step__head">
+          <h2 class="step__title" id="step-1-title" tabindex="-1">{steps[1].title}</h2>
+          <p class="step__intro">Choose the category that best describes your situation. If you are unsure, pick the closest match or “Other civil matter.”</p>
+        </header>
+        <IntakeField name="disputeType" label="Type of dispute" as="select" required options={disputeOptions} />
+      </section>
+
+      <!-- Step 3: Dispute information -->
+      <section class="step" data-step="2" aria-labelledby="step-2-title" hidden>
+        <header class="step__head">
+          <h2 class="step__title" id="step-2-title" tabindex="-1">{steps[2].title}</h2>
+          <p class="step__intro">A short, factual summary is all we need for an initial assessment. You do not need to attach documents now.</p>
+        </header>
+
+        <p class="step__caution">
+          <Icon name="lock" size={18} />
+          <span>Please do not include Social Security numbers, bank or card numbers, passwords, medical records or other highly sensitive information.</span>
+        </p>
+
+        <div class="step__grid">
+          <IntakeField
+            name="opposingParty"
+            label="Name of the opposing individual or business"
+            required
+            maxlength={limits.opposingParty}
+            autocomplete="off"
+          />
+          <IntakeField
+            name="opposingLocation"
+            label="Opposing party’s city and state, if known"
+            maxlength={limits.opposingLocation}
+            placeholder="e.g. Fort Lauderdale, FL"
+            autocomplete="off"
+          />
+          <IntakeField
+            name="amount"
+            label="Approximate amount in dispute, if applicable"
+            maxlength={limits.amount}
+            inputmode="decimal"
+            prefix="$"
+            placeholder="2,500"
+            autocomplete="off"
+          />
+        </div>
+
+        <IntakeField
+          name="description"
+          label="What happened?"
+          as="textarea"
+          required
+          rows={7}
+          maxlength={limits.description.max}
+          counter
+          hint="Briefly describe the dispute, including key dates and any agreement involved."
+        />
+        <IntakeField
+          name="resolution"
+          label="What resolution are you seeking?"
+          as="textarea"
+          required
+          rows={3}
+          maxlength={limits.resolution.max}
+          counter
+          hint="For example: payment of the amount owed, return of a deposit, completion of work or a refund."
+        />
+
+        <fieldset class="choice" data-field="hasDeadline" aria-describedby="intake-hasDeadline-error">
+          <legend class="choice__legend">
+            Is there a deadline or upcoming court date?<span class="choice__req" aria-hidden="true">*</span>
+          </legend>
+          <div class="choice__options">
+            {
+              deadlineOptions.map((option) => (
+                <label class="choice__option">
+                  <input type="radio" name="hasDeadline" value={option.value} aria-required="true" />
+                  <span>{option.label}</span>
+                </label>
+              ))
+            }
+          </div>
+          <p class="choice__error" id="intake-hasDeadline-error" data-error-for="hasDeadline"></p>
+        </fieldset>
+
+        <div class="deadline-details" data-deadline-details hidden>
+          <IntakeField
+            name="deadlineDetails"
+            label="Please describe the deadline or court date"
+            required
+            as="textarea"
+            rows={2}
+            maxlength={limits.deadlineDetails}
+            hint="Include the date and what it relates to. If a deadline is close, please also call the office."
+          />
+        </div>
+      </section>
+
+      <!-- Step 4: Review and submit -->
+      <section class="step" data-step="3" aria-labelledby="step-3-title" hidden>
+        <header class="step__head">
+          <h2 class="step__title" id="step-3-title" tabindex="-1">{steps[3].title}</h2>
+          <p class="step__intro">Please check your information before submitting. Use “Edit” to make changes.</p>
+        </header>
+
+        <div class="review" data-review></div>
+
+        <div class="ack" data-field="acknowledgment">
+          <h3 class="ack__title">Before you submit, please confirm:</h3>
+          <ul class="ack__list" role="list">
+            <li>This form is an inquiry, not an engagement agreement.</li>
+            <li>Submitting information does not automatically create an attorney-client relationship.</li>
+            <li>The {offer.priceDisplay} service is subject to attorney review and acceptance.</li>
+            <li>I should not submit highly sensitive information through this unsecured form.</li>
+          </ul>
+          <label class="ack__check">
+            <input
+              type="checkbox"
+              name="acknowledgment"
+              id="intake-acknowledgment"
+              aria-required="true"
+              aria-describedby="intake-acknowledgment-error"
+            />
+            <span>I have read and understand these statements.<span class="choice__req" aria-hidden="true">*</span></span>
+          </label>
+          <p class="choice__error" id="intake-acknowledgment-error" data-error-for="acknowledgment"></p>
+          <p class="ack__note">{offer.payment.noUpfront} {offer.payment.suitability}</p>
+        </div>
+
+        <div class="submit-error" data-submit-error role="alert" tabindex="-1" hidden>
+          <h3>We couldn’t send your request.</h3>
+          <p data-submit-error-text>
+            Your information has not been lost. Please try again, or contact the office directly.
+          </p>
+          <p class="submit-error__contact">
+            <a href={firm.phone.href}>{firm.phone.display}</a> · <a href={`mailto:${firm.email}`}>{firm.email}</a>
+          </p>
+        </div>
+      </section>
+
+      <!-- Spam trap: hidden from people and assistive technology. -->
+      <div class="hp" aria-hidden="true">
+        <label for="intake-hl-ref">Leave this field empty</label>
+        <input type="text" id="intake-hl-ref" name="hl_ref" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <div class="intake__nav">
+        <button type="button" class="btn btn--outline" data-prev hidden>
+          <Icon name="arrow" size={16} class="flip" />
+          Previous
+        </button>
+        <button type="button" class="btn btn--lg" data-next>
+          Next
+          <Icon name="arrow" size={18} />
+        </button>
+        <button type="submit" class="btn btn--accent btn--lg" data-submit hidden>
+          <span class="spinner" aria-hidden="true"></span>
+          <span data-submit-label>Submit Request</span>
+        </button>
+      </div>
+      <p class="intake__saved" data-saved-note>Your answers are kept as you move between steps.</p>
+    </form>
+
+    <!-- Outcomes -->
+    <section class="outcome" data-outcome="delivered" tabindex="-1" aria-labelledby="outcome-delivered-title" hidden>
+      <span class="outcome__icon outcome__icon--ok"><Icon name="check" size={32} /></span>
+      <p class="outcome__demo" data-demo-note hidden>
+        Demo mode: this is a test build and nothing was sent to Hoffman Legal.
+      </p>
+      <h2 id="outcome-delivered-title">Thank you. Your request has been received.</h2>
+      <p class="lead">
+        Hoffman Legal will review your inquiry to determine whether your matter is suitable for the
+        {offer.priceDisplay} demand letter service. We will contact you using the details you provided.
+      </p>
+      <ol class="outcome__next" role="list">
+        <li><strong>Attorney review.</strong> Your information is reviewed and a conflict check is performed. We may ask follow-up questions.</li>
+        <li><strong>Decision.</strong> If your matter is accepted, you will receive the engagement terms. If it is not a fit, we will let you know.</li>
+        <li><strong>Engagement and payment.</strong> {offer.payment.headline}. Representation begins only after a signed engagement agreement.</li>
+      </ol>
+      <p class="outcome__note">
+        Submitting this request does not create an attorney-client relationship. If you have an urgent deadline, please
+        call <a href={firm.phone.href}>{firm.phone.display}</a>.
+      </p>
+      <a href="/" class="btn btn--outline">Return to Home</a>
+    </section>
+
+    <section class="outcome" data-outcome="not_configured" tabindex="-1" aria-labelledby="outcome-nc-title" hidden>
+      <span class="outcome__icon outcome__icon--info"><Icon name="info" size={32} /></span>
+      <h2 id="outcome-nc-title">Online submission isn’t available yet</h2>
+      <p class="lead">
+        Your request has <strong>not</strong> been sent. Online delivery for this form has not been set up yet. Please
+        contact Hoffman Legal directly and we will be glad to review your matter.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn--lg" data-mailto href={`mailto:${firm.email}`}>
+          <Icon name="mail" size={18} />
+          Email My Request
+        </a>
+        <a class="btn btn--outline btn--lg" href={firm.phone.href}>
+          <Icon name="phone" size={18} />
+          Call {firm.phone.display}
+        </a>
+      </div>
+      <p class="outcome__note">
+        “Email My Request” opens your email app with your answers filled in so you can review and send them yourself.
+      </p>
+      <button type="button" class="outcome__back" data-back-to-form>Back to my answers</button>
+    </section>
+  </div>
+</div>
+
+<script>
+  import { initIntakeForm } from '@/scripts/intake-form';
+  const root = document.querySelector<HTMLElement>('[data-intake]');
+  if (root) initIntakeForm(root);
+</script>
+
+<style>
+  .intake__noscript {
+    padding: var(--space-5);
+    border: 1px solid var(--color-brass-500);
+    border-radius: var(--radius-md);
+    background: #fdfaf3;
+  }
+
+  :global(html:not(.js)) .intake__shell {
+    display: none;
+  }
+
+  .intake__shell {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+  }
+
+  /* ---------- Progress ---------- */
+  .progress {
+    padding: var(--space-5) clamp(1.25rem, 0.8rem + 2vw, 2.5rem);
+    border-bottom: 1px solid var(--color-line);
+    background: var(--color-paper);
+  }
+
+  .progress__count {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-brass-700);
+  }
+
+  .progress__bar {
+    height: 4px;
+    margin-top: var(--space-3);
+    border-radius: 99px;
+    background: var(--color-line);
+    overflow: hidden;
+  }
+
+  .progress__bar span {
+    display: block;
+    width: 25%;
+    height: 100%;
+    background: var(--color-brass-500);
+    transition: width 400ms var(--ease);
+  }
+
+  .progress__steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+    padding: 0;
+  }
+
+  .progress__step {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .progress__dot {
+    display: inline-grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 50%;
+    background: var(--color-surface);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    transition:
+      background-color var(--duration) var(--ease),
+      border-color var(--duration) var(--ease),
+      color var(--duration) var(--ease);
+  }
+
+  .progress__dot :global(.progress__check) {
+    display: none;
+  }
+
+  .progress__step[aria-current='step'] {
+    color: var(--color-navy-900);
+    font-weight: 600;
+  }
+
+  .progress__step[aria-current='step'] .progress__dot {
+    border-color: var(--color-navy-900);
+    background: var(--color-navy-900);
+    color: var(--color-brass-500);
+  }
+
+  .progress__step.is-complete .progress__dot {
+    border-color: var(--color-brass-500);
+    background: var(--color-brass-500);
+    color: var(--color-navy-950);
+  }
+
+  .progress__step.is-complete .progress__num {
+    display: none;
+  }
+
+  .progress__step.is-complete .progress__dot :global(.progress__check) {
+    display: block;
+  }
+
+  .progress__label-short {
+    display: none;
+  }
+
+  @media (max-width: 40rem) {
+    .progress__label-full {
+      display: none;
+    }
+
+    .progress__label-short {
+      display: inline;
+    }
+
+    .progress__step {
+      flex-direction: column;
+      text-align: center;
+      font-size: var(--text-xs);
+    }
+  }
+
+  /* ---------- Form ---------- */
+  .intake__form {
+    padding: clamp(1.5rem, 1rem + 2.5vw, 3rem) clamp(1.25rem, 0.8rem + 2vw, 2.5rem);
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  .step[hidden] {
+    display: none;
+  }
+
+  .step__title {
+    font-size: var(--text-2xl);
+  }
+
+  .step__title:focus {
+    outline: none;
+  }
+
+  .step__intro {
+    margin-top: var(--space-2);
+    color: var(--color-text-muted);
+  }
+
+  .step__grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 44rem) {
+    .step__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .step__caution {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border-left: 2px solid var(--color-brass-500);
+    background: var(--color-paper);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .step__caution :global(svg) {
+    flex-shrink: 0;
+    margin-top: 0.15em;
+    color: var(--color-brass-700);
+  }
+
+  /* Radio group */
+  .choice {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .choice__legend {
+    margin-bottom: var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-navy-900);
+  }
+
+  .choice__req {
+    margin-left: 0.2em;
+    color: var(--color-brass-700);
+  }
+
+  .choice__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  .choice__option {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 2.75rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition:
+      border-color var(--duration) var(--ease),
+      background-color var(--duration) var(--ease);
+  }
+
+  .choice__option:hover {
+    border-color: var(--color-navy-700);
+  }
+
+  .choice__option:has(input:checked) {
+    border-color: var(--color-navy-900);
+    background: var(--color-navy-100);
+  }
+
+  .choice__option input,
+  .ack__check input {
+    width: 1.125rem;
+    height: 1.125rem;
+    accent-color: var(--color-navy-900);
+  }
+
+  .choice__error {
+    display: none;
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: #a3261b;
+  }
+
+  .is-invalid > .choice__error,
+  .is-invalid .choice__error {
+    display: block;
+  }
+
+  .is-invalid .choice__option,
+  .ack.is-invalid .ack__check {
+    border-color: #a3261b;
+  }
+
+  .deadline-details[hidden] {
+    display: none;
+  }
+
+  /* Review */
+  .review {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .review :global(.review__section) {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .review :global(.review__head) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-5);
+    background: var(--color-paper);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .review :global(.review__head h3) {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-navy-900);
+  }
+
+  .review :global(.review__edit) {
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-navy-700);
+  }
+
+  .review :global(.review__edit:hover) {
+    border-color: var(--color-navy-900);
+  }
+
+  .review :global(dl) {
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .review :global(dl > div) {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  @media (min-width: 44rem) {
+    .review :global(dl > div) {
+      grid-template-columns: 14rem 1fr;
+      gap: var(--space-4);
+    }
+  }
+
+  .review :global(dt) {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .review :global(dd) {
+    margin: 0;
+    color: var(--color-navy-900);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .review :global(dd.is-empty) {
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+
+  /* Acknowledgment */
+  .ack {
+    padding: var(--space-5);
+    border: 1px solid var(--color-brass-500);
+    border-radius: var(--radius-md);
+    background: #fdfaf3;
+  }
+
+  .ack__title {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-navy-900);
+  }
+
+  .ack__list {
+    display: grid;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    padding-left: 1.25rem;
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+
+  .ack__check {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    font-weight: 600;
+    color: var(--color-navy-900);
+    cursor: pointer;
+  }
+
+  .ack__check input {
+    margin-top: 0.2em;
+    flex-shrink: 0;
+  }
+
+  .ack__note {
+    margin-top: var(--space-3);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* Error summary & submit error */
+  .error-summary,
+  .submit-error {
+    margin-bottom: var(--space-5);
+    padding: var(--space-4) var(--space-5);
+    border: 1px solid #a3261b;
+    border-left-width: 4px;
+    border-radius: var(--radius-sm);
+    background: #fffafa;
+  }
+
+  .error-summary:focus,
+  .submit-error:focus {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  .error-summary__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: #a3261b;
+  }
+
+  .error-summary :global(ul) {
+    display: grid;
+    gap: var(--space-1);
+    margin-top: var(--space-2);
+    padding-left: 1.75rem;
+    font-size: var(--text-sm);
+  }
+
+  .error-summary :global(a) {
+    color: #a3261b;
+  }
+
+  .submit-error {
+    margin: 0;
+  }
+
+  .submit-error h3 {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: 600;
+    color: #a3261b;
+  }
+
+  .submit-error p {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+  }
+
+  .submit-error__contact a {
+    font-weight: 600;
+  }
+
+  /* Spam trap */
+  .hp {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* Navigation */
+  .intake__nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: var(--space-7);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .intake__nav [data-next],
+  .intake__nav [data-submit] {
+    margin-left: auto;
+  }
+
+  .intake__nav [hidden] {
+    display: none;
+  }
+
+  .intake__nav :global(.flip) {
+    transform: rotate(180deg);
+  }
+
+  @media (max-width: 30rem) {
+    .intake__nav {
+      flex-direction: column-reverse;
+      align-items: stretch;
+    }
+
+    .intake__nav .btn {
+      width: 100%;
+      margin-left: 0;
+    }
+  }
+
+  .intake__saved {
+    margin-top: var(--space-3);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* Loading state */
+  .spinner {
+    display: none;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 700ms linear infinite;
+  }
+
+  [data-submit][aria-busy='true'] .spinner {
+    display: inline-block;
+  }
+
+  [data-submit][aria-busy='true'] {
+    cursor: progress;
+    opacity: 0.85;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* ---------- Outcomes ---------- */
+  .outcome {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-5);
+    padding: clamp(2rem, 1.2rem + 3vw, 3.5rem) clamp(1.25rem, 0.8rem + 2vw, 2.5rem);
+  }
+
+  .outcome[hidden] {
+    display: none;
+  }
+
+  .outcome:focus {
+    outline: none;
+  }
+
+  .outcome h2 {
+    font-size: var(--text-2xl);
+  }
+
+  .outcome__icon {
+    display: inline-grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+  }
+
+  .outcome__icon--ok {
+    background: var(--color-navy-900);
+    color: var(--color-brass-500);
+  }
+
+  .outcome__icon--info {
+    background: var(--color-brass-100);
+    color: var(--color-brass-700);
+  }
+
+  .outcome__demo {
+    padding: var(--space-2) var(--space-4);
+    border: 1px dashed #a3261b;
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: #a3261b;
+  }
+
+  .outcome__next {
+    display: grid;
+    gap: var(--space-3);
+    padding-left: 1.25rem;
+    color: var(--color-text);
+  }
+
+  .outcome__note {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .outcome__back {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-weight: 600;
+    color: var(--color-link);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+</style>

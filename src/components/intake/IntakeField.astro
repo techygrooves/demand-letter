@@ -1,0 +1,224 @@
+---
+/**
+ * One labelled form control with hint and error text wired up for assistive
+ * technology (aria-describedby, aria-invalid set by the form controller).
+ */
+interface Option {
+  value: string;
+  label: string;
+}
+
+interface Props {
+  name: string;
+  label: string;
+  as?: 'input' | 'textarea' | 'select';
+  type?: 'text' | 'email' | 'tel';
+  required?: boolean;
+  hint?: string;
+  placeholder?: string;
+  options?: readonly Option[];
+  maxlength?: number;
+  rows?: number;
+  autocomplete?: string;
+  inputmode?: 'text' | 'email' | 'tel' | 'decimal' | 'numeric';
+  /** Show a live character counter (textareas). */
+  counter?: boolean;
+  prefix?: string;
+}
+
+const {
+  name,
+  label,
+  as = 'input',
+  type = 'text',
+  required = false,
+  hint,
+  placeholder,
+  options = [],
+  maxlength,
+  rows = 5,
+  autocomplete,
+  inputmode,
+  counter = false,
+  prefix,
+} = Astro.props;
+
+const id = `intake-${name}`;
+const hintId = hint ? `${id}-hint` : undefined;
+const errorId = `${id}-error`;
+const counterId = counter ? `${id}-count` : undefined;
+const describedBy = [hintId, counterId, errorId].filter(Boolean).join(' ');
+---
+
+<div class="field" data-field={name}>
+  <label class="field__label" for={id}>
+    {label}
+    {required ? <span class="field__req" aria-hidden="true">*</span> : <span class="field__opt">(optional)</span>}
+  </label>
+  {hint && <p class="field__hint" id={hintId}>{hint}</p>}
+
+  <div class:list={['field__control', { 'field__control--prefix': prefix }]}>
+    {prefix && <span class="field__prefix" aria-hidden="true">{prefix}</span>}
+    {
+      as === 'textarea' ? (
+        <textarea
+          id={id}
+          name={name}
+          rows={rows}
+          maxlength={maxlength}
+          placeholder={placeholder}
+          aria-required={required ? 'true' : undefined}
+          aria-describedby={describedBy}
+          data-counter={counter ? counterId : undefined}
+        />
+      ) : as === 'select' ? (
+        <select id={id} name={name} aria-required={required ? 'true' : undefined} aria-describedby={describedBy} autocomplete={autocomplete}>
+          <option value="">Select…</option>
+          {options.map((o) => (
+            <option value={o.value}>{o.label}</option>
+          ))}
+        </select>
+      ) : (
+        <input
+          id={id}
+          name={name}
+          type={type}
+          maxlength={maxlength}
+          placeholder={placeholder}
+          autocomplete={autocomplete}
+          inputmode={inputmode}
+          aria-required={required ? 'true' : undefined}
+          aria-describedby={describedBy}
+        />
+      )
+    }
+  </div>
+
+  {
+    counter && maxlength && (
+      <p class="field__count" id={counterId}>
+        <span data-count>0</span> / {maxlength.toLocaleString('en-US')} characters
+      </p>
+    )
+  }
+  <p class="field__error" id={errorId} data-error-for={name}></p>
+</div>
+
+<style>
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .field__label {
+    font-weight: 600;
+    font-size: var(--text-sm);
+    color: var(--color-navy-900);
+  }
+
+  .field__req {
+    margin-left: 0.2em;
+    color: var(--color-brass-700);
+  }
+
+  .field__opt {
+    margin-left: 0.35em;
+    font-weight: 400;
+    color: var(--color-text-muted);
+  }
+
+  .field__hint,
+  .field__count {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .field__count {
+    text-align: right;
+  }
+
+  .field__control {
+    position: relative;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 1rem; /* 16px prevents iOS zoom on focus */
+    line-height: 1.5;
+    transition:
+      border-color var(--duration) var(--ease),
+      box-shadow var(--duration) var(--ease);
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 8rem;
+  }
+
+  select {
+    appearance: none;
+    padding-right: 2.5rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5l5-5' fill='none' stroke='%231f3a61' stroke-width='1.6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+  }
+
+  input:hover,
+  select:hover,
+  textarea:hover {
+    border-color: var(--color-navy-700);
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--color-navy-700);
+    box-shadow: 0 0 0 3px rgb(47 111 209 / 0.25);
+  }
+
+  .field__control--prefix input {
+    padding-left: 2rem;
+  }
+
+  .field__prefix {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+
+  .field__error {
+    display: none;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: #a3261b;
+  }
+
+  .field.is-invalid .field__error {
+    display: block;
+  }
+
+  .field.is-invalid input,
+  .field.is-invalid select,
+  .field.is-invalid textarea {
+    border-color: #a3261b;
+    background: #fffafa;
+  }
+
+  .field.is-invalid .field__error::before {
+    content: '! ';
+    font-weight: 700;
+  }
+</style>
