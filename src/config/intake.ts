@@ -62,3 +62,14 @@ export const steps = [
   { id: 'details', title: 'Dispute Information', short: 'Details' },
   { id: 'review', title: 'Review and Submit', short: 'Review' },
 ] as const;
+
+/**
+ * Where intake submissions are delivered. Environment variables
+ * PUBLIC_INTAKE_PROVIDER / PUBLIC_INTAKE_ENDPOINT override these defaults
+ * (e.g. for testing). The endpoint URL is public by design: it appears in
+ * the browser's JavaScript and is not a secret.
+ */
+export const submission = {
+  provider: 'formspree',
+  endpoint: 'https://formspree.io/f/xbgdoylb',
+} as const;

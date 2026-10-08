@@ -7,6 +7,8 @@ import { defineConfig, devices } from '@playwright/test';
  *  - :4321 production build with no submission provider (the default state).
  *  - :4322 dev server using the "endpoint" provider with a placeholder URL;
  *    tests intercept that URL to simulate success and failure responses.
+ *  - :4323 dev server with the default configuration (Formspree). Tests intercept
+ *    formspree.io, so no real submissions are sent.
  *
  * Set PW_CHROMIUM_PATH to use a preinstalled Chromium instead of a Playwright download.
  */
@@ -39,6 +41,14 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
       env: { PUBLIC_INTAKE_PROVIDER: 'endpoint', PUBLIC_INTAKE_ENDPOINT: ENDPOINT },
+    },
+    {
+      // Default configuration: submissions go to the firm's Formspree form (intercepted in tests).
+      command: 'npx astro dev --port 4323',
+      url: 'http://localhost:4323/get-started/',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+      env: { PUBLIC_INTAKE_PROVIDER: '', PUBLIC_INTAKE_ENDPOINT: '' },
     },
   ],
 });

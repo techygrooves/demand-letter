@@ -7,7 +7,7 @@
  *   successful submission) so an accidental refresh does not lose answers.
  * - Validation and submission are delegated to src/lib/intake/.
  */
-import { minFillTimeMs, steps as stepConfig } from '@/config/intake';
+import { minFillTimeMs, steps as stepConfig, submission } from '@/config/intake';
 import { firm } from '@/config/site';
 import {
   emptyIntake,
@@ -94,8 +94,9 @@ export function initIntakeForm(root: HTMLElement) {
   const demoNote = root.querySelector<HTMLElement>('[data-demo-note]');
 
   const provider = resolveProvider({
-    provider: import.meta.env.PUBLIC_INTAKE_PROVIDER,
-    endpoint: import.meta.env.PUBLIC_INTAKE_ENDPOINT,
+    // Environment variables override the defaults in src/config/intake.ts; empty values are ignored.
+    provider: import.meta.env.PUBLIC_INTAKE_PROVIDER || submission.provider,
+    endpoint: import.meta.env.PUBLIC_INTAKE_ENDPOINT || submission.endpoint,
     isDev: import.meta.env.DEV || import.meta.env.PUBLIC_INTAKE_ALLOW_DEMO === 'true',
   });
 

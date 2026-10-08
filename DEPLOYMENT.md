@@ -14,8 +14,8 @@ sent and offers email/phone instead.
 
 | Integration | Status |
 | --- | --- |
-| Intake form delivery | **Not configured.** Visitors are told nothing was sent and offered email/phone. |
-| Notification emails | **None.** No email is sent by the site. Delivery depends on the endpoint chosen in step 2. |
+| Intake form delivery | **Configured: Formspree** (`https://formspree.io/f/xbgdoylb`, set in `src/config/intake.ts`). |
+| Notification emails | Sent **by Formspree** to the email address on the Formspree account. The site itself sends no email. |
 | Payment | **None.** Payment is arranged after case acceptance, outside the website. |
 | Analytics / cookies | **None.** |
 
@@ -35,8 +35,7 @@ Edit `.env`:
 ```ini
 SITE_URL=https://demandletter.hoffman.legal   # the exact address the site will live at
 BASE_PATH=/                                    # keep "/" for a domain or subdomain
-# PUBLIC_INTAKE_PROVIDER=endpoint              # see step 2; leave commented until an endpoint exists
-# PUBLIC_INTAKE_ENDPOINT=https://...
+# Form delivery defaults to the firm's Formspree form (src/config/intake.ts); see step 2 to override.
 ```
 
 Then build and check:
@@ -50,9 +49,17 @@ npm run preview   # optional: view the built site at http://localhost:4321
 `.env` holds configuration only and is ignored by git. Every `PUBLIC_*` value is embedded in the public JavaScript,
 so never put passwords or API secrets there.
 
-## 2. (Optional) Turn on form delivery
+## 2. Form delivery (Formspree, already connected)
 
-Pick one HTTPS endpoint that accepts a JSON `POST` and forwards it to the firm, then set:
+The request form posts to the firm's Formspree form by default; no `.env` setting is needed. In the Formspree
+dashboard, before launch:
+
+- Confirm the form (Formspree emails a verification link after the first submission).
+- Check the notification email address, and set **Settings → Restrict to domain** to the live domain
+  (e.g. `demandletter.hoffman.legal`) so other sites cannot post to the form.
+- Review Formspree's confidentiality and data-retention terms, as prospective clients may describe legal matters.
+
+To use a different service instead, pick one HTTPS endpoint that accepts a JSON `POST` and forwards it to the firm, then set:
 
 ```ini
 PUBLIC_INTAKE_PROVIDER=endpoint
@@ -112,8 +119,8 @@ FTP (hPanel → Files → FTP Accounts) works too: upload the contents of `dist/
 - Open `https://demandletter.hoffman.legal/`: styles, fonts and navigation load; `http://` redirects to `https://`.
 - Click through Pricing, How It Works, Disputes, FAQ, About, Contact and the legal pages.
 - Open a missing page (e.g. `/test-404/`): the custom "We couldn't find that page" screen appears.
-- Complete the request form. Without an endpoint you should see "Online submission isn't available yet"; with one,
-  confirm the test submission arrives.
+- Complete the request form with test details: you should see "Thank you. Your request has been received." and the
+  notification should arrive from Formspree (the first one may ask you to confirm the form).
 - `https://demandletter.hoffman.legal/robots.txt` and `/sitemap-index.xml` show the correct domain.
 - Optionally submit the sitemap in Google Search Console.
 
