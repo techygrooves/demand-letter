@@ -1,0 +1,24 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { faqs } from '@/data/faq';
+---
+
+<BaseLayout
+  title="Frequently Asked Questions"
+  description="Answers to common questions about attorney demand letters, the $500 flat fee and the types of Florida disputes Hoffman Legal handles."
+>
+  <PageHero eyebrow="FAQ" title="Frequently asked questions">
+    What to know before ordering an attorney-prepared demand letter.
+  </PageHero>
+
+  <section class="section" aria-label="Questions and answers">
+    <div class="container container--narrow">
+      <FaqList items={faqs} />
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>

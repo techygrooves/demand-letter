@@ -1,0 +1,30 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import ContactOptions from '@/components/ContactOptions.astro';
+import { offer } from '@/config/site';
+---
+
+<BaseLayout
+  title="Get Started"
+  description={`Start your attorney-prepared demand letter with Hoffman Legal for a ${offer.priceDisplay} flat fee.`}
+>
+  <PageHero eyebrow={`${offer.priceDisplay} Flat Fee`} title="Start your demand letter">
+    Tell us about your dispute and the attorney will review whether a demand letter is the right next step.
+  </PageHero>
+
+  <section class="section" aria-label="Get started">
+    <div class="container">
+      <!-- Intake form will be added in a later step. -->
+      <p class="intro">To begin, contact the firm directly:</p>
+      <ContactOptions />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .intro {
+    margin-bottom: var(--space-5);
+    font-size: var(--text-lg);
+  }
+</style>

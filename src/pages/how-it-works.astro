@@ -1,0 +1,24 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import ProcessSteps from '@/components/sections/ProcessSteps.astro';
+import DisputeTypes from '@/components/sections/DisputeTypes.astro';
+import CtaBand from '@/components/CtaBand.astro';
+---
+
+<BaseLayout
+  title="How It Works"
+  description="How Hoffman Legal prepares attorney-signed demand letters: share your facts, attorney review, drafting and delivery, all for a $500 flat fee."
+>
+  <PageHero eyebrow="How It Works" title="From your dispute to a signed attorney demand letter">
+    A clear, four-step process designed to move quickly and keep you informed.
+  </PageHero>
+
+  <ProcessSteps showHeading={false} tone="default" />
+
+  <!-- TODO: Add detail on what information and documents clients should prepare. -->
+
+  <DisputeTypes />
+
+  <CtaBand />
+</BaseLayout>

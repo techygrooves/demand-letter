@@ -1,0 +1,22 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import AttorneyIntro from '@/components/sections/AttorneyIntro.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { firm } from '@/config/site';
+---
+
+<BaseLayout
+  title="About"
+  description={`About ${firm.name} and attorney ${firm.attorney}, preparing demand letters for Florida civil disputes from ${firm.address.city}, Florida.`}
+>
+  <PageHero eyebrow="About the Firm" title={`${firm.name}`}>
+    A Florida law firm based in {firm.address.city}, helping individuals and businesses resolve disputes efficiently.
+  </PageHero>
+
+  <AttorneyIntro showLink={false} />
+
+  <!-- TODO: Add verified attorney biography, bar admission and education details. -->
+
+  <CtaBand />
+</BaseLayout>

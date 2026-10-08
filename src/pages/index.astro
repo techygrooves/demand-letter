@@ -1,0 +1,72 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import HomeHero from '@/components/sections/HomeHero.astro';
+import DisputeTypes from '@/components/sections/DisputeTypes.astro';
+import ProcessSteps from '@/components/sections/ProcessSteps.astro';
+import AttorneyIntro from '@/components/sections/AttorneyIntro.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import PricingCard from '@/components/PricingCard.astro';
+import FaqList from '@/components/FaqList.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { faqs } from '@/data/faq';
+import { offer } from '@/config/site';
+
+const featuredFaqs = faqs.filter((item) => item.featured);
+---
+
+<BaseLayout>
+  <HomeHero />
+
+  <DisputeTypes />
+
+  <ProcessSteps />
+
+  <section class="section" aria-labelledby="pricing-title">
+    <div class="container pricing">
+      <div class="pricing__copy">
+        <SectionHeading eyebrow="Transparent Pricing" title={`${offer.priceDisplay}. One letter. No surprises.`} id="pricing-title">
+          Legal fees should never be a mystery. Your demand letter is prepared for a single flat fee, so you know the
+          full cost before you begin.
+        </SectionHeading>
+        <a href="/pricing/" class="pricing__link">Learn more about pricing &rarr;</a>
+      </div>
+      <PricingCard />
+    </div>
+  </section>
+
+  <AttorneyIntro />
+
+  <section class="section section--stone" aria-labelledby="faq-title">
+    <div class="container container--narrow">
+      <SectionHeading eyebrow="Questions" title="Frequently asked questions" id="faq-title" />
+      <FaqList items={featuredFaqs} />
+      <p class="faq-more"><a href="/faq/">View all questions &rarr;</a></p>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .pricing {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+
+  @media (min-width: 56rem) {
+    .pricing {
+      grid-template-columns: 1fr minmax(22rem, 28rem);
+      gap: var(--space-9);
+    }
+  }
+
+  .pricing__link,
+  .faq-more a {
+    font-weight: 600;
+  }
+
+  .faq-more {
+    margin-top: var(--space-6);
+  }
+</style>

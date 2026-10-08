@@ -1,0 +1,227 @@
+---
+import Icon from '@/components/Icon.astro';
+import { cta, firm, offer } from '@/config/site';
+
+const assurances = ['Prepared and signed by a Florida attorney', 'One transparent flat fee', 'Civil disputes of many kinds'];
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <p class="eyebrow">Florida Attorney Demand Letters</p>
+      <h1 id="hero-title">
+        When they owe you, <em>an attorney’s letter</em> gets their attention.
+      </h1>
+      <p class="lead">
+        {firm.name} prepares professional, attorney-signed demand letters for unpaid debts, broken agreements, withheld
+        deposits and other civil disputes. One flat fee, no hourly billing.
+      </p>
+      <div class="btn-row">
+        <a href={cta.primary.href} class="btn btn--lg">{cta.primary.label}</a>
+        <a href="/how-it-works/" class="btn btn--outline btn--lg">See How It Works</a>
+      </div>
+      <ul class="hero__assurances" role="list">
+        {
+          assurances.map((item) => (
+            <li>
+              <Icon name="check" size={18} />
+              {item}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <aside class="hero__letter" aria-label="Pricing summary">
+      <div class="letter">
+        <div class="letter__head">
+          <span class="letter__firm">{firm.name}</span>
+          <span class="letter__rule"></span>
+        </div>
+        <p class="letter__re">RE: Formal Demand for Payment</p>
+        <div class="letter__lines" aria-hidden="true">
+          <span></span><span></span><span></span><span class="short"></span>
+        </div>
+        <div class="letter__price">
+          <span class="letter__amount">{offer.priceDisplay}</span>
+          <span class="letter__label">Flat fee per letter</span>
+        </div>
+        <p class="letter__sign">
+          <span class="letter__signature">{firm.attorney}</span>
+          <span class="letter__title">Attorney at Law</span>
+        </p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding-block: clamp(3.5rem, 2rem + 6vw, 7.5rem);
+    overflow: hidden;
+    background:
+      radial-gradient(70rem 40rem at 110% -10%, rgb(184 149 90 / 0.12), transparent 60%),
+      linear-gradient(180deg, var(--color-paper), var(--color-stone));
+  }
+
+  .hero__grid {
+    display: grid;
+    gap: var(--space-8);
+    align-items: center;
+  }
+
+  @media (min-width: 64rem) {
+    .hero__grid {
+      grid-template-columns: 1.25fr 1fr;
+      gap: var(--space-9);
+    }
+  }
+
+  .hero__copy > * + * {
+    margin-top: var(--space-5);
+  }
+
+  .hero__copy .btn-row {
+    margin-top: var(--space-6);
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--color-brass-700);
+  }
+
+  .hero__assurances {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-5);
+    padding: 0;
+    list-style: none;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .hero__assurances li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .hero__assurances :global(svg) {
+    color: var(--color-brass-600);
+  }
+
+  /* Stylised letter: a visual cue for the product, built in CSS (no image request). */
+  .hero__letter {
+    position: relative;
+    max-width: 26rem;
+    width: 100%;
+    margin-inline: auto;
+  }
+
+  .hero__letter::before {
+    content: '';
+    position: absolute;
+    inset: 1.25rem -1.25rem -1.25rem 1.25rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-md);
+  }
+
+  .letter {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    padding: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .letter__head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .letter__firm {
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-navy-900);
+  }
+
+  .letter__rule {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-brass-500), transparent);
+  }
+
+  .letter__re {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-navy-800);
+  }
+
+  .letter__lines {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .letter__lines span {
+    height: 0.4rem;
+    border-radius: 99px;
+    background: var(--color-stone);
+  }
+
+  .letter__lines .short {
+    width: 60%;
+  }
+
+  .letter__price {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-5);
+    border: 1px solid var(--color-brass-100);
+    border-radius: var(--radius-sm);
+    background: #fdfaf3;
+    text-align: center;
+  }
+
+  .letter__amount {
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 2.4rem + 2.6vw, 4rem);
+    line-height: 1;
+    color: var(--color-navy-900);
+  }
+
+  .letter__label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-brass-700);
+  }
+
+  .letter__sign {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .letter__signature {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: var(--text-xl);
+    color: var(--color-navy-800);
+  }
+
+  .letter__title {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+</style>

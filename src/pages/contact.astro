@@ -1,0 +1,31 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import ContactOptions from '@/components/ContactOptions.astro';
+import { firm } from '@/config/site';
+---
+
+<BaseLayout
+  title="Contact"
+  description={`Contact ${firm.name} in ${firm.address.city}, Florida. Call ${firm.phone.display} or email ${firm.email} about a demand letter.`}
+>
+  <PageHero eyebrow="Contact" title="Talk to us about your dispute">
+    Have a question before getting started? Reach out by phone or email.
+  </PageHero>
+
+  <section class="section" aria-label="Contact details">
+    <div class="container">
+      <ContactOptions />
+      <p class="note muted">
+        Please do not send confidential information until an attorney-client relationship has been established.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .note {
+    margin-top: var(--space-6);
+    font-size: var(--text-sm);
+  }
+</style>

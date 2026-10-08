@@ -1,0 +1,57 @@
+---
+/** Closing call-to-action band, reused at the bottom of most pages. */
+import { cta, firm, offer } from '@/config/site';
+
+interface Props {
+  title?: string;
+  text?: string;
+}
+
+const {
+  title = 'Put your demand in writing, from an attorney.',
+  text = `A firm, professional demand letter is often the fastest way to get the other side's attention. One flat fee of ${offer.priceDisplay}.`,
+} = Astro.props;
+---
+
+<section class="section section--navy cta-band" aria-labelledby="cta-band-title">
+  <div class="container cta-band__inner">
+    <div class="cta-band__copy">
+      <p class="eyebrow">{offer.priceDisplay} flat fee</p>
+      <h2 id="cta-band-title">{title}</h2>
+      <p class="lead">{text}</p>
+    </div>
+    <div class="btn-row">
+      <a href={cta.primary.href} class="btn btn--accent btn--lg">{cta.primary.label}</a>
+      <a href={firm.phone.href} class="btn btn--outline btn--lg">Call {firm.phone.display}</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    background:
+      radial-gradient(50rem 30rem at 85% 120%, rgb(184 149 90 / 0.18), transparent 60%),
+      var(--color-navy-900);
+  }
+
+  .cta-band__inner {
+    display: grid;
+    gap: var(--space-6);
+    align-items: end;
+  }
+
+  .cta-band__copy > * + * {
+    margin-top: var(--space-4);
+  }
+
+  h2 {
+    max-width: 20ch;
+  }
+
+  @media (min-width: 64rem) {
+    .cta-band__inner {
+      grid-template-columns: 1fr auto;
+      gap: var(--space-8);
+    }
+  }
+</style>

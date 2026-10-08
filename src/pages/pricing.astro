@@ -1,0 +1,55 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import PricingCard from '@/components/PricingCard.astro';
+import CtaBand from '@/components/CtaBand.astro';
+import { offer } from '@/config/site';
+---
+
+<BaseLayout
+  title="Pricing"
+  description={`Attorney-prepared demand letters for a ${offer.priceDisplay} flat fee. See exactly what is included, with no hourly billing.`}
+>
+  <PageHero eyebrow="Pricing" title={`One flat fee: ${offer.priceDisplay}`}>
+    Know the full cost before you begin. No retainers, no hourly billing for your demand letter.
+  </PageHero>
+
+  <section class="section" aria-label="Pricing details">
+    <div class="container pricing">
+      <div class="prose">
+        <h2>What you get</h2>
+        <p>
+          Your flat fee covers attorney review of your matter and a professionally drafted demand letter tailored to
+          your facts, prepared on firm letterhead and signed by the attorney.
+        </p>
+        <h2>What is not included</h2>
+        <p>
+          Litigation, court filings, extended negotiation and representation beyond the demand letter are not included.
+          If your matter requires further work, we will discuss the options and any additional fees with you in advance.
+        </p>
+        <!-- TODO: Confirm turnaround time, delivery method and refund policy with the attorney. -->
+      </div>
+      <PricingCard headingLevel="h2" />
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .pricing {
+    display: grid;
+    gap: var(--space-8);
+    align-items: start;
+  }
+
+  @media (min-width: 56rem) {
+    .pricing {
+      grid-template-columns: 1fr minmax(22rem, 28rem);
+    }
+  }
+
+  .prose h2:first-child {
+    margin-top: 0;
+  }
+</style>
