@@ -6,6 +6,7 @@ import LegalNotice from '@/components/LegalNotice.astro';
 import CtaBand from '@/components/CtaBand.astro';
 import { faqs, faqPlainText } from '@/data/faq';
 import { firm } from '@/config/site';
+import { url } from '@/lib/url';
 
 const faqSchema = {
   '@context': 'https://schema.org',
@@ -38,7 +39,7 @@ const faqSchema = {
         <p>Contact the office before submitting a request.</p>
         <p><a href={firm.phone.href}>{firm.phone.display}</a></p>
         <p><a href={`mailto:${firm.email}`}>{firm.email}</a></p>
-        <a class="btn faq-page__cta" href="/get-started/">Start Your Request</a>
+        <a class="btn faq-page__cta" href={url('/get-started/')}>Start Your Request</a>
       </aside>
     </div>
   </section>

@@ -11,6 +11,7 @@ import SectionHeading from '@/components/SectionHeading.astro';
 import FaqList from '@/components/FaqList.astro';
 import CtaBand from '@/components/CtaBand.astro';
 import { faqs, faqPlainText } from '@/data/faq';
+import { url } from '@/lib/url';
 
 const featuredFaqs = faqs.filter((item) => item.featured);
 
@@ -57,7 +58,7 @@ const faqSchema = {
           Straight answers about demand letters and how the flat-fee service works.
         </SectionHeading>
         <p class="faq-layout__more">
-          <a href="/faq/">View all questions</a>
+          <a href={url('/faq/')}>View all questions</a>
           <span aria-hidden="true">·</span>
           <a href="#contact">Ask us directly</a>
         </p>

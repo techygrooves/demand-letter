@@ -2,6 +2,7 @@
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 import { firm, primaryNav, legalNav, cta, disclaimers, offer, firmPolicyLinks } from '@/config/site';
+import { url } from '@/lib/url';
 
 const year = new Date().getFullYear();
 const legalLinks = [
@@ -29,7 +30,7 @@ const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComp
       <nav class="site-footer__col" aria-label="Footer">
         <h2 class="site-footer__heading">Explore</h2>
         <ul role="list">
-          <li><a href="/">Home</a></li>
+          <li><a href={url('/')}>Home</a></li>
           {
             primaryNav.map((item) => (
               <li>

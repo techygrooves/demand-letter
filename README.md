@@ -70,6 +70,18 @@ The endpoint receives JSON (`data`, `summary`, `submittedAt`, `source`, `spam`).
 the visitor as "received". The client-side spam checks (hidden honeypot field, minimum fill time) should be
 repeated by the backend. See `.env.example`.
 
+## Deploying to GitHub Pages
+
+The site must be **built** before it can be served; GitHub Pages cannot run Astro on its own. The workflow in
+`.github/workflows/deploy.yml` builds and publishes the site on every push to `main`.
+
+One-time setup: repository **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+
+The site is then available at `https://<owner>.github.io/<repo>/` (for this repository,
+https://techygrooves.github.io/demand-letter/). Internal links use `url()` from `src/lib/url.ts` so they work under
+that sub-path. For a custom domain, set the repository variables `SITE_URL` and `BASE_PATH` (`/`) under
+Settings → Secrets and variables → Actions → Variables.
+
 ## Deploying to Hostinger
 
 1. Set the production URL if it differs from the default in `astro.config.mjs`:

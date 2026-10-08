@@ -2,6 +2,7 @@
 /** "Important information" panel listing the service safeguards from site config. */
 import Icon from './Icon.astro';
 import { serviceNotices, disclaimers } from '@/config/site';
+import { url } from '@/lib/url';
 
 interface Props {
   title?: string;
@@ -28,7 +29,7 @@ const { title = 'Important information about this service', id = 'important-info
   </ul>
   <p class="notice__footer">
     {disclaimers.attorneyAdvertising} {disclaimers.advertising}
-    <a href="/disclaimer/">Read the full legal disclaimer</a>.
+    <a href={url('/disclaimer/')}>Read the full legal disclaimer</a>.
   </p>
 </aside>
 

@@ -1,5 +1,6 @@
 ---
 import { firm } from '@/config/site';
+import { url } from '@/lib/url';
 
 interface Props {
   /** Use on dark backgrounds. */
@@ -9,7 +10,7 @@ interface Props {
 const { inverse = false } = Astro.props;
 ---
 
-<a href="/" class:list={['logo', { 'logo--inverse': inverse }]} aria-label={`${firm.name}, demand letters home`}>
+<a href={url('/')} class:list={['logo', { 'logo--inverse': inverse }]} aria-label={`${firm.name}, demand letters home`}>
   <span class="logo__mark" aria-hidden="true">H</span>
   <span class="logo__text">
     <span class="logo__name">{firm.name}</span>

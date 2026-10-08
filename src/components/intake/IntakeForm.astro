@@ -7,6 +7,7 @@ import IntakeField from './IntakeField.astro';
 import Icon from '@/components/Icon.astro';
 import { disputeOptions, deadlineOptions, usStates, limits, steps } from '@/config/intake';
 import { firm, offer } from '@/config/site';
+import { url } from '@/lib/url';
 
 const stateOptions = usStates.map(([value, label]) => ({ value, label }));
 ---
@@ -278,7 +279,7 @@ const stateOptions = usStates.map(([value, label]) => ({ value, label }));
         Submitting this request does not create an attorney-client relationship. If you have an urgent deadline, please
         call <a href={firm.phone.href}>{firm.phone.display}</a>.
       </p>
-      <a href="/" class="btn btn--outline">Return to Home</a>
+      <a href={url('/')} class="btn btn--outline">Return to Home</a>
     </section>
 
     <section class="outcome" data-outcome="not_configured" tabindex="-1" aria-labelledby="outcome-nc-title" hidden>
