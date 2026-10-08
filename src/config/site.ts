@@ -101,49 +101,74 @@ export const offer = {
   },
 } as const;
 
-/** Common situations where a demand letter may help. Order = display order. */
+/**
+ * Types of disputes. These are examples of potential matters, not a promise
+ * that every dispute qualifies. Every matter is subject to attorney assessment.
+ * Order = display order. The last item (`other: true`) renders as a wide card.
+ */
 export const disputeTypes = [
   {
-    icon: 'invoice',
-    title: 'Unpaid Invoices',
-    text: 'A client or customer has not paid for work you performed or goods you delivered.',
-  },
-  {
     icon: 'cash',
-    title: 'Money Owed & Personal Loans',
-    text: 'Someone borrowed money or agreed to repay you and has not followed through.',
+    title: 'Unpaid Debts and Outstanding Payments',
+    text: 'Unpaid invoices, personal loans, overdue payments and money owed.',
   },
   {
     icon: 'contract',
     title: 'Breach of Contract',
-    text: 'A party did not perform under a written or verbal agreement, and you suffered a loss.',
+    text: 'Broken agreements, unfulfilled contractual obligations and disputes over contract terms.',
+  },
+  {
+    icon: 'key',
+    title: 'Landlord-Tenant Disputes',
+    text: 'Security deposits, lease disagreements, property damage and other suitable rental disputes.',
   },
   {
     icon: 'home',
-    title: 'Security Deposits & Leases',
-    text: 'A deposit was wrongfully withheld, or a lease obligation was not honored.',
-  },
-  {
-    icon: 'tools',
-    title: 'Contractor & Home Improvement',
-    text: 'Work was left incomplete, performed poorly or abandoned after you paid.',
-  },
-  {
-    icon: 'shield',
-    title: 'Property Damage',
-    text: 'Another person or business damaged your vehicle, home or personal property.',
+    title: 'Property and Real Estate Disputes',
+    text: 'Property damage, boundary disagreements, contractor issues and other appropriate civil property claims.',
   },
   {
     icon: 'cart',
-    title: 'Consumer Disputes',
-    text: 'A seller refused a refund, failed to deliver or sold you a defective product.',
+    title: 'Consumer Complaints',
+    text: 'Defective goods, refund disputes, unfair billing and failures to deliver promised services.',
   },
   {
     icon: 'building',
-    title: 'Business-to-Business Disputes',
-    text: 'A vendor, partner or customer has not met its payment or performance obligations.',
+    title: 'Business and Commercial Disputes',
+    text: 'Vendor disagreements, unpaid business invoices, service contract breaches and payment disagreements.',
+  },
+  {
+    icon: 'tools',
+    title: 'Contractor and Construction Disputes',
+    text: 'Incomplete work, defective workmanship, payment issues and alleged failures to perform.',
+  },
+  {
+    icon: 'briefcase',
+    title: 'Employment-Related Civil Claims',
+    text: 'Unpaid compensation, contractual payment disputes and other suitable pre-litigation matters, subject to legal review.',
+  },
+  {
+    icon: 'shield',
+    title: 'Insurance and Reimbursement Disputes',
+    text: 'Disputed payments, reimbursement requests and appropriate insurance-related demands.',
+  },
+  {
+    icon: 'scale',
+    title: 'Other Civil Disputes',
+    text: 'Suitable civil matters not specifically listed above. Tell us what happened and the attorney will assess whether a demand letter is an appropriate next step.',
+    other: true,
   },
 ] as const;
+
+/** Limitations shown alongside the dispute categories. */
+export const disputeNotices = {
+  assessment: 'All matters are subject to attorney assessment.',
+  items: [
+    'The categories above are examples of potential matters, not a promise that every dispute qualifies.',
+    'This service does not guarantee that any statutory notice or legally required pre-suit procedure is satisfied.',
+    'Criminal defense, contested litigation and specialized claims are not included in the $500 fee.',
+  ],
+} as const;
 
 /**
  * Process steps. Avoid promising specific turnaround times or delivery
@@ -183,6 +208,7 @@ export interface NavItem {
 
 export const primaryNav: NavItem[] = [
   { label: 'How It Works', href: '/how-it-works/' },
+  { label: 'Disputes', href: '/disputes/' },
   { label: 'Pricing', href: '/pricing/' },
   { label: 'About', href: '/about/' },
   { label: 'FAQ', href: '/faq/' },

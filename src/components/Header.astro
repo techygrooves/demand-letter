@@ -38,7 +38,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       <div class="site-nav__actions">
         <a href={firm.phone.href} class="site-nav__phone">
           <Icon name="phone" size={18} />
-          <span>{firm.phone.display}</span>
+          <span class="site-nav__phone-text">{firm.phone.display}</span>
         </a>
         <a href={cta.primary.href} class="btn">{cta.primary.label}</a>
       </div>
@@ -248,8 +248,51 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
       gap: var(--space-5);
     }
 
+    .site-nav__link,
+    .site-nav__phone {
+      white-space: nowrap;
+    }
+
     .site-nav__phone {
       font-size: var(--text-sm);
+    }
+  }
+
+  /* Small laptops: tighten spacing and show the phone as an icon-only button. */
+  @media (min-width: 64rem) and (max-width: 79.999rem) {
+    .site-nav,
+    .is-open .site-nav {
+      gap: var(--space-5);
+    }
+
+    .site-nav__list {
+      gap: var(--space-4);
+    }
+
+    .site-nav__actions {
+      gap: var(--space-3);
+    }
+
+    .site-nav__phone {
+      display: inline-grid;
+      place-items: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      border: 1px solid var(--color-line-strong);
+      border-radius: var(--radius-sm);
+    }
+
+    .site-nav__phone:hover {
+      border-color: var(--color-navy-900);
+    }
+
+    .site-nav__phone-text {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
     }
   }
 

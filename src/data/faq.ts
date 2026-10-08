@@ -64,7 +64,7 @@ export const faqs: (FaqItem & { featured?: boolean; pricing?: boolean; process?:
     featured: true,
     question: 'What types of disputes do you handle?',
     answer:
-      'Hoffman Legal prepares demand letters for many kinds of civil disputes, including unpaid invoices, money owed, breach of contract, security deposits, contractor disputes, property damage, consumer disputes and business-to-business disputes. Each matter is reviewed to confirm a demand letter is appropriate.',
+      'Hoffman Legal prepares demand letters for many kinds of civil disputes, including unpaid debts, breach of contract, landlord-tenant and property disputes, consumer complaints, business and contractor disputes, and certain employment-related and insurance or reimbursement matters. These are examples only. All matters are subject to attorney assessment, and criminal defense, contested litigation and specialized claims are not included in the $500 fee.',
   },
   {
     featured: true,
