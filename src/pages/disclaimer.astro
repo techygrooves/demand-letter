@@ -1,17 +1,75 @@
 ---
 import LegalLayout from '@/layouts/LegalLayout.astro';
-import { disclaimers } from '@/config/site';
+import { disclaimers, firm, offer, barLookupUrl, firmPolicyLinks } from '@/config/site';
 ---
 
-<LegalLayout title="Legal Disclaimer" description="Legal disclaimer and attorney advertising notice for Hoffman Legal.">
-  <!-- Draft. Final text to be reviewed by the attorney before launch. -->
+<LegalLayout
+  title="Legal Disclaimer"
+  description="Legal disclaimer, attorney advertising notice and jurisdiction information for the Hoffman Legal demand letter service."
+>
+  <!-- Draft for attorney review before launch. -->
   <h2>Attorney advertising</h2>
-  <p>{disclaimers.advertising}</p>
-  <h2>No legal advice or attorney-client relationship</h2>
-  <p>{disclaimers.noRelationship}</p>
+  <p>{disclaimers.attorneyAdvertising} {disclaimers.advertising}</p>
+
+  <h2>No legal advice</h2>
+  <p>
+    The information on this website is general information only. It is not legal advice and should not be relied on as
+    a substitute for advice about your specific situation.
+  </p>
+
+  <h2>No attorney-client relationship</h2>
+  <p>
+    Visiting this website, submitting an inquiry, or calling or emailing {firm.name} does not create an attorney-client
+    relationship. An attorney-client relationship is formed only if {firm.name} accepts your matter, completes a conflict
+    check and you sign a written engagement agreement. Until then, please do not send confidential or highly sensitive
+    information.
+  </p>
+
+  <h2>Scope of representation</h2>
+  <p>
+    The {offer.priceDisplay} service covers one attorney-prepared demand letter. It does not automatically include
+    litigation, court proceedings, settlement negotiations, additional letters or extensive investigation. If your matter
+    is accepted, the scope of the representation is governed by the engagement agreement you sign.
+  </p>
+
+  <h2>No guarantee of results</h2>
+  <p>
+    {disclaimers.results} A demand letter does not guarantee that the other party will pay, respond or resolve the
+    dispute, and it does not prevent anyone from filing a lawsuit.
+  </p>
+
+  <h2>Legal deadlines</h2>
+  <p>
+    Sending a demand letter does not stop, pause or extend a statute of limitations or any other legal deadline. Some
+    claims also have specific notice requirements, and this service does not guarantee that any such requirement is
+    satisfied. If you believe a deadline may apply to your matter, seek legal advice promptly.
+  </p>
+
   <h2>Jurisdiction</h2>
   <p>
-    Hoffman Legal is a Florida law firm. Information on this website is intended for matters arising under Florida law
-    unless otherwise stated.
+    {firm.legalName} is a Florida law firm located at {firm.address.street}, {firm.address.city},
+    {firm.address.region} {firm.address.postalCode}. This service is focused on disputes connected to Florida and is not
+    available for every matter or in every jurisdiction. Information on this website relates to Florida unless otherwise
+    stated. The license status of any Florida attorney can be checked through
+    <a href={barLookupUrl} target="_blank" rel="noopener">The Florida Bar’s member search</a>.
+  </p>
+
+  <h2>Related policies</h2>
+  <p>
+    See this website’s <a href="/privacy/">Privacy Policy</a> and <a href="/terms/">Terms of Use</a>.
+    {
+      firmPolicyLinks.privacy || firmPolicyLinks.terms ? (
+        <>
+          {firm.name}’s firm-wide policies are available on the firm website:
+          {firmPolicyLinks.privacy && <a href={firmPolicyLinks.privacy}>Privacy Policy</a>}
+          {firmPolicyLinks.privacy && firmPolicyLinks.terms && ' and '}
+          {firmPolicyLinks.terms && <a href={firmPolicyLinks.terms}>Terms</a>}.
+        </>
+      ) : (
+        <>
+          More information about the firm is available at <a href={firm.website}>hoffman.legal</a>.
+        </>
+      )
+    }
   </p>
 </LegalLayout>

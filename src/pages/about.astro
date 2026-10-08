@@ -1,22 +1,28 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHero from '@/components/PageHero.astro';
-import AttorneyIntro from '@/components/sections/AttorneyIntro.astro';
+import AttorneyProfile from '@/components/sections/AttorneyProfile.astro';
+import LegalNotice from '@/components/LegalNotice.astro';
 import CtaBand from '@/components/CtaBand.astro';
 import { firm } from '@/config/site';
 ---
 
 <BaseLayout
-  title="About"
-  description={`About ${firm.name} and attorney ${firm.attorney}, preparing demand letters for Florida civil disputes from ${firm.address.city}, Florida.`}
+  title="About the Attorney"
+  description={`The ${firm.name} demand letter service is provided through ${firm.legalName}, a Florida law firm in ${firm.address.city}. Requests are reviewed by attorney ${firm.attorney}.`}
 >
-  <PageHero eyebrow="About the Firm" title={`${firm.name}`}>
-    A Florida law firm based in {firm.address.city}, helping individuals and businesses resolve disputes efficiently.
+  <PageHero eyebrow="About" title={`${firm.name} and attorney ${firm.attorney}`}>
+    The demand letter service on this website is provided through {firm.name}, a Florida law firm in
+    {firm.address.city}.
   </PageHero>
 
-  <AttorneyIntro showLink={false} />
+  <AttorneyProfile />
 
-  <!-- TODO: Add verified attorney biography, bar admission and education details. -->
+  <section class="section section--stone" aria-label="Important information">
+    <div class="container">
+      <LegalNotice />
+    </div>
+  </section>
 
   <CtaBand />
 </BaseLayout>

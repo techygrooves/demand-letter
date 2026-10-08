@@ -2,23 +2,98 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHero from '@/components/PageHero.astro';
 import FaqList from '@/components/FaqList.astro';
+import LegalNotice from '@/components/LegalNotice.astro';
 import CtaBand from '@/components/CtaBand.astro';
-import { faqs } from '@/data/faq';
+import { faqs, faqPlainText } from '@/data/faq';
+import { firm } from '@/config/site';
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: { '@type': 'Answer', text: faqPlainText(item) },
+  })),
+};
 ---
 
 <BaseLayout
   title="Frequently Asked Questions"
-  description="Answers to common questions about attorney demand letters, the $500 flat fee and the types of Florida disputes Hoffman Legal handles."
+  description="Answers to common questions about Hoffman Legal's $500 attorney demand letter service: cost, what is included, qualifying disputes, timing and the attorney-client relationship."
 >
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
   <PageHero eyebrow="FAQ" title="Frequently asked questions">
-    What to know before ordering an attorney-prepared demand letter.
+    Clear answers about attorney demand letters and how the {firm.name} service works.
   </PageHero>
 
-  <section class="section" aria-label="Questions and answers">
-    <div class="container container--narrow">
-      <FaqList items={faqs} />
+  <section class="section faq-page" aria-label="Questions and answers">
+    <div class="container faq-page__grid">
+      <div class="faq-page__main">
+        <FaqList items={faqs} showControls numbered />
+      </div>
+      <aside class="faq-page__aside" aria-labelledby="faq-help-title">
+        <h2 id="faq-help-title" class="faq-page__aside-title">Still have a question?</h2>
+        <p>Contact the office before submitting a request.</p>
+        <p><a href={firm.phone.href}>{firm.phone.display}</a></p>
+        <p><a href={`mailto:${firm.email}`}>{firm.email}</a></p>
+        <a class="btn faq-page__cta" href="/get-started/">Start Your Request</a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--stone" aria-label="Important information">
+    <div class="container">
+      <LegalNotice />
     </div>
   </section>
 
   <CtaBand />
 </BaseLayout>
+
+<style>
+  .faq-page__grid {
+    display: grid;
+    gap: var(--space-7);
+    align-items: start;
+  }
+
+  @media (min-width: 64rem) {
+    .faq-page__grid {
+      grid-template-columns: minmax(0, 1fr) 17rem;
+      gap: var(--space-8);
+    }
+
+    .faq-page__aside {
+      position: sticky;
+      top: calc(var(--header-height) + var(--space-5));
+    }
+  }
+
+  .faq-page__aside {
+    padding: var(--space-6);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background: var(--color-stone);
+  }
+
+  .faq-page__aside-title {
+    font-size: var(--text-lg);
+  }
+
+  .faq-page__aside p {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .faq-page__aside a:not(.btn) {
+    font-weight: 600;
+  }
+
+  .faq-page__cta {
+    width: 100%;
+    margin-top: var(--space-5);
+  }
+</style>

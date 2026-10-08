@@ -33,6 +33,17 @@ src/
 
 Most content changes, such as the phone number, the price or the list of what's included, only require editing `src/config/site.ts`.
 
+## Attorney and legal content
+
+- `attorneyProfile` in `src/config/site.ts`: attorney details shown on `/about/`. Add only facts confirmed against
+  hoffman.legal or the attorney's Florida Bar profile; items awaiting confirmation are listed in `toVerify` and are
+  not displayed.
+- `firmPolicyLinks`: set the URLs of the firm's existing privacy policy and terms on hoffman.legal to link them from
+  the footer and legal pages.
+- `disclaimers` and `serviceNotices`: attorney-advertising, jurisdiction and service safeguard wording, used in the
+  footer, the "Important information" notice and the legal pages.
+- `src/data/faq.ts`: FAQ answers. Each has an anchor (e.g. `/faq/#faq-cost`).
+
 ## Intake form
 
 The multi-step request form lives at `/get-started/`.

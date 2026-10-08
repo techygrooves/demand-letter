@@ -1,9 +1,14 @@
 ---
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
-import { firm, primaryNav, legalNav, cta, disclaimers, offer } from '@/config/site';
+import { firm, primaryNav, legalNav, cta, disclaimers, offer, firmPolicyLinks } from '@/config/site';
 
 const year = new Date().getFullYear();
+const legalLinks = [
+  ...legalNav,
+  ...(firmPolicyLinks.privacy ? [{ label: 'Firm Privacy Policy', href: firmPolicyLinks.privacy }] : []),
+  ...(firmPolicyLinks.terms ? [{ label: 'Firm Terms', href: firmPolicyLinks.terms }] : []),
+];
 const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
   `${firm.address.street}, ${firm.address.city}, ${firm.address.region} ${firm.address.postalCode}`,
 )}`;
@@ -61,8 +66,9 @@ const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComp
     </div>
 
     <div class="site-footer__legal">
-      <p>{disclaimers.advertising}</p>
-      <p>{disclaimers.noRelationship}</p>
+      <p><strong>Attorney advertising.</strong> {disclaimers.attorneyAdvertising} {disclaimers.advertising}</p>
+      <p>{disclaimers.noRelationship} {disclaimers.results}</p>
+      <p>{disclaimers.jurisdiction}</p>
     </div>
 
     <div class="site-footer__bottom">
@@ -73,7 +79,7 @@ const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComp
       </p>
       <ul role="list" class="site-footer__legal-nav">
         {
-          legalNav.map((item) => (
+          legalLinks.map((item) => (
             <li>
               <a href={item.href}>{item.label}</a>
             </li>
@@ -96,6 +102,12 @@ const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComp
   .site-footer a:not(.btn) {
     color: var(--color-text-inverse);
     text-decoration: none;
+  }
+
+  /* Links inside sentences stay underlined so they are not identified by color alone. */
+  .site-footer p a:not(.btn) {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   .site-footer a:not(.btn):hover {

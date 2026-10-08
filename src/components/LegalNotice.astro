@@ -1,0 +1,100 @@
+---
+/** "Important information" panel listing the service safeguards from site config. */
+import Icon from './Icon.astro';
+import { serviceNotices, disclaimers } from '@/config/site';
+
+interface Props {
+  title?: string;
+  id?: string;
+}
+
+const { title = 'Important information about this service', id = 'important-information' } = Astro.props;
+---
+
+<aside class="notice" id={id} aria-labelledby={`${id}-title`}>
+  <h2 class="notice__title" id={`${id}-title`}>
+    <Icon name="scale" size={22} />
+    {title}
+  </h2>
+  <ul class="notice__list" role="list">
+    {
+      serviceNotices.map((item) => (
+        <li>
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="notice__footer">
+    {disclaimers.attorneyAdvertising} {disclaimers.advertising}
+    <a href="/disclaimer/">Read the full legal disclaimer</a>.
+  </p>
+</aside>
+
+<style>
+  .notice {
+    padding: clamp(1.5rem, 1rem + 2vw, 2.75rem);
+    border: 1px solid var(--color-line);
+    border-top: 3px solid var(--color-navy-900);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+
+  .notice__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--text-xl);
+  }
+
+  .notice__title :global(svg) {
+    flex-shrink: 0;
+    color: var(--color-brass-600);
+  }
+
+  .notice__list {
+    display: grid;
+    gap: var(--space-5) var(--space-7);
+    margin-top: var(--space-6);
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 48rem) {
+    .notice__list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .notice__list li {
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--color-brass-500);
+  }
+
+  .notice__list h3 {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    line-height: var(--leading-snug);
+    color: var(--color-navy-900);
+  }
+
+  .notice__list p {
+    margin-top: var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .notice__footer {
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-line);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .notice__footer a {
+    font-weight: 600;
+  }
+</style>

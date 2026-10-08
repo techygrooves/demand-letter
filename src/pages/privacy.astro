@@ -1,12 +1,68 @@
 ---
 import LegalLayout from '@/layouts/LegalLayout.astro';
-import { firm } from '@/config/site';
+import { firm, firmPolicyLinks } from '@/config/site';
 ---
 
-<LegalLayout title="Privacy Policy" description="How Hoffman Legal collects, uses and protects information submitted through this website.">
-  <!-- Placeholder. Final privacy policy to be drafted once the intake form and any analytics are defined. -->
+<LegalLayout
+  title="Privacy Policy"
+  description="How the Hoffman Legal demand letter website handles information submitted through it."
+>
+  <!--
+    Draft for attorney review. Describes this website as built: no analytics, no
+    advertising trackers and no cookies set by the site. Update this page if
+    analytics, a form service or other third-party tools are added.
+  -->
   <p>
-    This privacy policy will describe how {firm.name} collects, uses and protects information you provide through this
-    website. For questions in the meantime, email <a href={`mailto:${firm.email}`}>{firm.email}</a>.
+    This policy explains how the {firm.name} demand letter website handles information.
+    {
+      firmPolicyLinks.privacy ? (
+        <>
+          It supplements {firm.name}’s <a href={firmPolicyLinks.privacy}>firm-wide privacy policy</a>.
+        </>
+      ) : (
+        <>For information about the firm generally, visit <a href={firm.website}>hoffman.legal</a>.</>
+      )
+    }
+  </p>
+
+  <h2>Information you provide</h2>
+  <p>
+    If you submit a request, you provide your name, email address, phone number, the state where the dispute arose, and
+    information about your dispute and the other party. We use this information to review your inquiry, run a conflict
+    check and contact you about your request. Please do not submit Social Security numbers, financial account or card
+    numbers, passwords, medical records or other highly sensitive information through the form.
+  </p>
+
+  <h2>Information stored in your browser</h2>
+  <p>
+    While you complete the request form, your answers are kept temporarily in your browser’s session storage so they are
+    not lost if the page reloads. This copy stays on your device, is removed when you close the browser tab, and is
+    cleared after a successful submission.
+  </p>
+
+  <h2>Cookies and analytics</h2>
+  <p>
+    This website does not set its own cookies and does not use analytics or advertising trackers. Our web hosting
+    provider may keep standard server logs, such as IP addresses and pages requested, for security and operation of the
+    site.
+  </p>
+
+  <h2>How information is shared</h2>
+  <p>
+    We do not sell personal information. Information you submit is used by {firm.name} to evaluate and respond to your
+    inquiry and may be processed by service providers that host this website or deliver form submissions on the firm’s
+    behalf.
+  </p>
+
+  <h2>Confidentiality</h2>
+  <p>
+    Submitting information through this website does not create an attorney-client relationship. Information sent before
+    a relationship is formed may not be protected in the same way as communications with a client.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    Questions about this policy can be sent to <a href={`mailto:${firm.email}`}>{firm.email}</a> or {firm.legalName},
+    {firm.address.street}, {firm.address.city}, {firm.address.region} {firm.address.postalCode}.
   </p>
 </LegalLayout>

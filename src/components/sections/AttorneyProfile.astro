@@ -1,0 +1,228 @@
+---
+/**
+ * Attorney section. Uses only confirmed facts from `firm` and `attorneyProfile`
+ * in site config. See the note on `attorneyProfile` before adding biography details.
+ */
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+import { firm, attorneyProfile, barLookupUrl } from '@/config/site';
+
+const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  `${firm.address.street}, ${firm.address.city}, ${firm.address.region} ${firm.address.postalCode}`,
+)}`;
+---
+
+<section class="section" id="attorney" aria-labelledby="attorney-title">
+  <div class="container profile">
+    <figure class="profile__card">
+      <div class="profile__photo" aria-hidden="true">
+        <!-- Replace with an approved headshot using astro:assets <Image /> and alt text naming the attorney. -->
+        <span>DH</span>
+      </div>
+      <figcaption>
+        <span class="profile__name">{attorneyProfile.name}</span>
+        <span class="profile__role">{attorneyProfile.role}, {attorneyProfile.firm}</span>
+      </figcaption>
+    </figure>
+
+    <div class="profile__copy">
+      <SectionHeading eyebrow="About the Attorney" title={attorneyProfile.name} id="attorney-title">
+        This demand letter service is provided through {firm.name}, a Florida law firm with an office in
+        {firm.address.city}.
+      </SectionHeading>
+
+      <div class="stack profile__text">
+        <p>
+          Requests submitted through this website are reviewed by attorney {attorneyProfile.name}. If a matter is
+          accepted for the {firm.name} demand letter service, the work is performed by {firm.legalName} under a written
+          engagement agreement that defines the scope of the representation.
+        </p>
+        <p>
+          You are welcome to ask for free written information about the firm’s qualifications and experience before
+          deciding whether to proceed.
+        </p>
+      </div>
+
+      <dl class="profile__facts">
+        <div>
+          <dt>Firm</dt>
+          <dd>{firm.legalName}</dd>
+        </div>
+        <div>
+          <dt>Office</dt>
+          <dd>
+            <a href={mapsUrl} target="_blank" rel="noopener">
+              {firm.address.street}, {firm.address.city}, {firm.address.region}
+              {firm.address.postalCode}
+              <span class="visually-hidden">(opens Google Maps in a new tab)</span>
+            </a>
+          </dd>
+        </div>
+        <div>
+          <dt>Phone</dt>
+          <dd><a href={firm.phone.href}>{firm.phone.display}</a></dd>
+        </div>
+        <div>
+          <dt>Email</dt>
+          <dd><a href={`mailto:${firm.email}`}>{firm.email}</a></dd>
+        </div>
+        <div>
+          <dt>Firm website</dt>
+          <dd>
+            <a href={firm.website} target="_blank" rel="noopener">
+              {attorneyProfile.firmWebsiteLabel}
+              <span class="visually-hidden">(opens in a new tab)</span>
+            </a>
+          </dd>
+        </div>
+      </dl>
+
+      <p class="profile__verify">
+        <Icon name="shield" size={20} />
+        <span>
+          The license status of any Florida attorney can be checked through
+          <a href={barLookupUrl} target="_blank" rel="noopener">
+            The Florida Bar’s public member search<span class="visually-hidden"> (opens in a new tab)</span></a
+          >.
+        </span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .profile {
+    display: grid;
+    gap: var(--space-7);
+    align-items: start;
+  }
+
+  @media (min-width: 56rem) {
+    .profile {
+      grid-template-columns: minmax(16rem, 0.75fr) 1.4fr;
+      gap: var(--space-9);
+    }
+  }
+
+  .profile__card {
+    max-width: 22rem;
+    width: 100%;
+  }
+
+  .profile__photo {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-md);
+    background:
+      radial-gradient(20rem 16rem at 80% 0%, rgb(184 149 90 / 0.25), transparent 70%),
+      linear-gradient(160deg, var(--color-navy-800), var(--color-navy-950));
+    color: var(--color-brass-500);
+    font-family: var(--font-serif);
+    font-size: 4rem;
+    letter-spacing: 0.08em;
+  }
+
+  .profile__photo::after {
+    content: '';
+    position: absolute;
+    inset: var(--space-4);
+    border: 1px solid rgb(184 149 90 / 0.4);
+    border-radius: var(--radius-sm);
+  }
+
+  figcaption {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--space-4);
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--color-brass-500);
+  }
+
+  .profile__name {
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    color: var(--color-navy-900);
+  }
+
+  .profile__role {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  @media (max-width: 55.999rem) {
+    .profile__card {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .profile__photo {
+      flex-shrink: 0;
+      width: 6.5rem;
+      font-size: 2rem;
+    }
+
+    .profile__photo::after {
+      inset: var(--space-2);
+    }
+
+    figcaption {
+      margin-top: 0;
+    }
+  }
+
+  .profile__copy :global(.section-heading) {
+    margin-bottom: var(--space-5);
+  }
+
+  .profile__facts {
+    display: grid;
+    margin-top: var(--space-6);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+
+  .profile__facts > div {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-3) var(--space-5);
+  }
+
+  .profile__facts > div + div {
+    border-top: 1px solid var(--color-line);
+  }
+
+  @media (min-width: 40rem) {
+    .profile__facts > div {
+      grid-template-columns: 9rem 1fr;
+      gap: var(--space-4);
+    }
+  }
+
+  .profile__facts dt {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .profile__facts dd {
+    margin: 0;
+    color: var(--color-navy-900);
+    overflow-wrap: anywhere;
+  }
+
+  .profile__verify {
+    display: flex;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .profile__verify :global(svg) {
+    flex-shrink: 0;
+    color: var(--color-brass-600);
+  }
+</style>
