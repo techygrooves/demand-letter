@@ -2,21 +2,37 @@
 import Icon from '@/components/Icon.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import { disputeTypes } from '@/config/site';
+
+interface Props {
+  /** Where the "not sure" link points. Use '#contact' on pages with a contact section. */
+  contactHref?: string;
+  tone?: 'default' | 'stone';
+}
+
+const { contactHref = '/contact/', tone = 'stone' } = Astro.props;
 ---
 
-<section class="section" aria-labelledby="disputes-title">
+<section
+  class:list={['section', { 'section--stone': tone === 'stone' }]}
+  id="situations"
+  aria-labelledby="situations-title"
+>
   <div class="container">
-    <SectionHeading eyebrow="Disputes We Handle" title="One service for many kinds of civil disputes" id="disputes-title">
-      From an unpaid invoice to a contractor who walked off the job, a formal demand from an attorney is often the
-      most efficient first step toward resolution.
+    <SectionHeading
+      eyebrow="Common Situations"
+      title="Where a demand letter may help"
+      id="situations-title"
+    >
+      Hoffman Legal prepares demand letters for a wide range of civil disputes involving individuals and businesses.
+      These are some of the most common.
     </SectionHeading>
 
-    <ul class="disputes" role="list">
+    <ul class="disputes reveal" role="list">
       {
         disputeTypes.map((item) => (
           <li class="dispute">
             <span class="dispute__icon">
-              <Icon name={item.icon} size={26} />
+              <Icon name={item.icon} size={24} />
             </span>
             <h3>{item.title}</h3>
             <p>{item.text}</p>
@@ -25,24 +41,24 @@ import { disputeTypes } from '@/config/site';
       }
     </ul>
 
-    <p class="disputes__note muted">
-      Don’t see your situation? <a href="/contact/">Contact us</a> to ask whether a demand letter is the right fit.
-    </p>
+    <div class="disputes__note">
+      <p>
+        <strong>Don’t see your situation?</strong> Many other civil disputes may also be a good fit. Each matter is
+        reviewed to confirm that a demand letter is an appropriate next step.
+      </p>
+      <a href={contactHref} class="btn btn--outline">Discuss Your Situation</a>
+    </div>
   </div>
 </section>
 
 <style>
   .disputes {
     display: grid;
-    gap: 1px;
+    gap: var(--space-4);
     padding: 0;
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-md);
-    background: var(--color-line);
-    overflow: hidden;
   }
 
-  @media (min-width: 40rem) {
+  @media (min-width: 36rem) {
     .disputes {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -50,16 +66,56 @@ import { disputeTypes } from '@/config/site';
 
   @media (min-width: 64rem) {
     .disputes {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-5);
     }
   }
 
   .dispute {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    padding: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+    padding: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
     background: var(--color-surface);
+    overflow: hidden;
+    transition:
+      transform var(--duration) var(--ease),
+      box-shadow var(--duration) var(--ease),
+      border-color var(--duration) var(--ease);
+  }
+
+  /* Brass rule that draws in on hover. */
+  .dispute::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 3px;
+    background: var(--color-brass-500);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 300ms var(--ease);
+  }
+
+  @media (hover: hover) {
+    .dispute:hover {
+      transform: translateY(-3px);
+      border-color: var(--color-line-strong);
+      box-shadow: var(--shadow-md);
+    }
+
+    .dispute:hover::after {
+      transform: scaleX(1);
+    }
+
+    .dispute:hover .dispute__icon {
+      background: var(--color-navy-900);
+      color: var(--color-brass-500);
+    }
   }
 
   .dispute__icon {
@@ -71,6 +127,30 @@ import { disputeTypes } from '@/config/site';
     border-radius: 50%;
     background: var(--color-brass-100);
     color: var(--color-brass-700);
+    transition:
+      background-color var(--duration) var(--ease),
+      color var(--duration) var(--ease);
+  }
+
+  @media (max-width: 35.999rem) {
+    .dispute {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      column-gap: var(--space-4);
+      row-gap: var(--space-1);
+      padding: var(--space-5);
+    }
+
+    .dispute__icon {
+      grid-row: span 2;
+      width: 2.5rem;
+      height: 2.5rem;
+      margin-bottom: 0;
+    }
+  }
+
+  .dispute h3 {
+    font-size: var(--text-lg);
   }
 
   .dispute p {
@@ -79,7 +159,24 @@ import { disputeTypes } from '@/config/site';
   }
 
   .disputes__note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4) var(--space-6);
     margin-top: var(--space-6);
+    padding: var(--space-5) var(--space-6);
+    border: 1px dashed var(--color-line-strong);
+    border-radius: var(--radius-md);
+  }
+
+  .disputes__note p {
+    flex: 1 1 28rem;
     font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .disputes__note strong {
+    color: var(--color-navy-900);
   }
 </style>

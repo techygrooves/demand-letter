@@ -1,0 +1,232 @@
+---
+import SectionHeading from '@/components/SectionHeading.astro';
+import Icon from '@/components/Icon.astro';
+import { firm, offer, cta } from '@/config/site';
+
+const reasons = [
+  {
+    icon: 'user',
+    title: 'Direct attorney involvement',
+    text: `Your letter is reviewed, prepared and signed by attorney ${firm.attorney}. It is not outsourced or generated from a generic form.`,
+  },
+  {
+    icon: 'scale',
+    title: 'A Florida law firm',
+    text: `${firm.name} is based in ${firm.address.city}, in Broward County, and focuses this service on disputes involving Florida.`,
+  },
+  {
+    icon: 'invoice',
+    title: 'Transparent flat-fee pricing',
+    text: `One ${offer.priceDisplay} fee for your demand letter. No hourly billing and no surprise charges for the letter.`,
+  },
+  {
+    icon: 'message',
+    title: 'Clear, professional communication',
+    text: 'You will know what is included, what the letter asks for and what your options are if the dispute is not resolved.',
+  },
+] as const;
+---
+
+<section class="section" id="why-hoffman" aria-labelledby="why-hoffman-title">
+  <div class="container choose">
+    <figure class="choose__portrait">
+      <div class="choose__photo" aria-hidden="true">
+        <!-- Replace with an optimized headshot using astro:assets <Image /> and descriptive alt text. -->
+        <span>DH</span>
+      </div>
+      <figcaption>
+        <span class="choose__name">{firm.attorney}</span>
+        <span class="choose__role">Attorney, {firm.name}</span>
+      </figcaption>
+    </figure>
+
+    <div class="choose__copy">
+      <SectionHeading eyebrow="Why Hoffman Legal" title={`Work directly with attorney ${firm.attorney}`} id="why-hoffman-title">
+        When you hire {firm.name}, your demand letter is handled by an attorney from start to finish. The goal is simple:
+        present your position clearly, professionally and persuasively.
+      </SectionHeading>
+
+      <ul class="reasons reveal" role="list">
+        {
+          reasons.map((item) => (
+            <li class="reason">
+              <span class="reason__icon">
+                <Icon name={item.icon} size={22} />
+              </span>
+              <div>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="btn-row choose__actions">
+        <a href={cta.primary.href} class="btn btn--lg">{cta.primary.label}</a>
+        <a href="/about/" class="choose__link">
+          About the firm <Icon name="arrow" size={16} />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .choose {
+    display: grid;
+    gap: var(--space-8);
+    align-items: start;
+  }
+
+  @media (min-width: 64rem) {
+    .choose {
+      grid-template-columns: minmax(18rem, 0.8fr) 1.4fr;
+      gap: var(--space-9);
+    }
+
+    .choose__portrait {
+      position: sticky;
+      top: calc(var(--header-height) + var(--space-5));
+    }
+  }
+
+  .choose__portrait {
+    max-width: 24rem;
+    width: 100%;
+  }
+
+  @media (max-width: 63.999rem) {
+    .choose {
+      gap: var(--space-6);
+    }
+
+    .choose__portrait {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .choose__photo {
+      flex-shrink: 0;
+      width: 6.5rem;
+      font-size: 2rem;
+    }
+
+    .choose__photo::after {
+      inset: var(--space-2);
+    }
+
+    figcaption {
+      margin-top: 0;
+    }
+  }
+
+  .choose__photo {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-md);
+    background:
+      radial-gradient(20rem 16rem at 80% 0%, rgb(184 149 90 / 0.25), transparent 70%),
+      linear-gradient(160deg, var(--color-navy-800), var(--color-navy-950));
+    color: var(--color-brass-500);
+    font-family: var(--font-serif);
+    font-size: 4.5rem;
+    letter-spacing: 0.08em;
+  }
+
+  .choose__photo::after {
+    content: '';
+    position: absolute;
+    inset: var(--space-4);
+    border: 1px solid rgb(184 149 90 / 0.4);
+    border-radius: var(--radius-sm);
+  }
+
+  figcaption {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--space-4);
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--color-brass-500);
+  }
+
+  .choose__name {
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    color: var(--color-navy-900);
+  }
+
+  .choose__role {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .reasons {
+    display: grid;
+    gap: var(--space-4);
+    padding: 0;
+  }
+
+  @media (min-width: 40rem) {
+    .reasons {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .reason {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    transition:
+      border-color var(--duration) var(--ease),
+      box-shadow var(--duration) var(--ease);
+  }
+
+  .reason:hover {
+    border-color: var(--color-brass-500);
+    box-shadow: var(--shadow-md);
+  }
+
+  .reason__icon {
+    color: var(--color-brass-600);
+  }
+
+  .reason h3 {
+    font-size: var(--text-lg);
+  }
+
+  .reason p {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .choose__actions {
+    align-items: center;
+    gap: var(--space-5);
+    margin-top: var(--space-7);
+  }
+
+  .choose__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .choose__link :global(svg) {
+    transition: transform var(--duration) var(--ease);
+  }
+
+  .choose__link:hover :global(svg) {
+    transform: translateX(3px);
+  }
+</style>

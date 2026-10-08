@@ -3,13 +3,17 @@
 import Icon from './Icon.astro';
 import { firm } from '@/config/site';
 
+const address = `${firm.address.street}, ${firm.address.city}, ${firm.address.region} ${firm.address.postalCode}`;
+
 const items = [
   { icon: 'phone', label: 'Call', value: firm.phone.display, href: firm.phone.href },
   { icon: 'mail', label: 'Email', value: firm.email, href: `mailto:${firm.email}` },
   {
     icon: 'pin',
     label: 'Office',
-    value: `${firm.address.street}, ${firm.address.city}, ${firm.address.region} ${firm.address.postalCode}`,
+    value: address,
+    href: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`,
+    external: true,
   },
 ] as const;
 ---
@@ -22,13 +26,14 @@ const items = [
           <Icon name={item.icon} />
         </span>
         <span class="contact-option__label">{item.label}</span>
-        {'href' in item ? (
-          <a class="contact-option__value" href={item.href}>
-            {item.value}
-          </a>
-        ) : (
-          <span class="contact-option__value">{item.value}</span>
-        )}
+        <a
+          class="contact-option__value"
+          href={item.href}
+          {...('external' in item ? { target: '_blank', rel: 'noopener' } : {})}
+        >
+          {item.value}
+          {'external' in item && <span class="visually-hidden"> (opens Google Maps in a new tab)</span>}
+        </a>
       </li>
     ))
   }
@@ -48,9 +53,34 @@ const items = [
     flex-direction: column;
     gap: var(--space-2);
     padding: var(--space-6);
+    position: relative;
     border: 1px solid var(--color-line);
     border-radius: var(--radius-md);
     background: var(--color-surface);
+    transition:
+      transform var(--duration) var(--ease),
+      box-shadow var(--duration) var(--ease),
+      border-color var(--duration) var(--ease);
+  }
+
+  /* Whole card is clickable via the link's stretched pseudo-element. */
+  .contact-option__value::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  @media (hover: hover) {
+    .contact-option:hover {
+      transform: translateY(-3px);
+      border-color: var(--color-brass-500);
+      box-shadow: var(--shadow-md);
+    }
+  }
+
+  .contact-option:focus-within {
+    border-color: var(--color-brass-500);
   }
 
   .contact-option__icon {
@@ -73,12 +103,11 @@ const items = [
     overflow-wrap: anywhere;
   }
 
-  a.contact-option__value {
+  .contact-option__value {
     text-decoration: none;
   }
 
-  a.contact-option__value:hover {
+  .contact-option:hover .contact-option__value {
     color: var(--color-brass-700);
-    text-decoration: underline;
   }
 </style>
