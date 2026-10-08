@@ -3,6 +3,7 @@
  * Page-level meta tags, Open Graph / Twitter cards and LegalService structured data.
  */
 import { firm, site, offer } from '@/config/site';
+import { url } from '@/lib/url';
 
 interface Props {
   title?: string;
@@ -16,17 +17,24 @@ const { title, description = site.description, image = site.ogImage, noindex = f
 const fullTitle = title ? `${title} | ${firm.name}` : site.title;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const imageUrl = new URL(image, Astro.site);
+const homeUrl = new URL(url('/'), Astro.site).toString();
+const isHome = Astro.url.pathname === url('/');
+/** Preview deployments (GitHub Pages) must not compete with the production site in search results. */
+const isPreview = Astro.site?.hostname.endsWith('github.io') ?? false;
 
-const structuredData = {
-  '@context': 'https://schema.org',
+/** Business entity, shared by every page (one @id so search engines treat it as one entity). */
+const legalService = {
   '@type': 'LegalService',
+  '@id': `${homeUrl}#legalservice`,
   name: `${firm.name} Demand Letters`,
   legalName: firm.legalName,
-  url: Astro.site?.toString(),
+  url: homeUrl,
+  image: imageUrl.toString(),
   sameAs: [firm.website],
   telephone: firm.phone.e164,
   email: firm.email,
   description: site.description,
+  priceRange: offer.priceDisplay,
   areaServed: { '@type': 'State', name: firm.areaServed },
   address: {
     '@type': 'PostalAddress',
@@ -40,16 +48,33 @@ const structuredData = {
   makesOffer: {
     '@type': 'Offer',
     name: 'Attorney-prepared demand letter',
+    description: offer.scope.join('; '),
     price: offer.price,
     priceCurrency: 'USD',
+    url: new URL(url('/pricing/'), Astro.site).toString(),
   },
+};
+
+/** Breadcrumb trail for interior pages (Home → page). */
+const breadcrumb = !isHome &&
+  title && {
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: homeUrl },
+      { '@type': 'ListItem', position: 2, name: title, item: canonical.toString() },
+    ],
+  };
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [legalService, ...(breadcrumb ? [breadcrumb] : [])],
 };
 ---
 
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
-{noindex && <meta name="robots" content="noindex, follow" />}
+<meta name="robots" content={noindex || isPreview ? 'noindex, follow' : 'index, follow, max-image-preview:large'} />
 
 <meta property="og:type" content="website" />
 <meta property="og:locale" content={site.locale} />

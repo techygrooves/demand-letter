@@ -155,7 +155,14 @@ const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComp
   }
 
   .site-footer__col li + li {
-    margin-top: var(--space-3);
+    margin-top: var(--space-1);
+  }
+
+  /* Comfortable tap targets on touch screens. */
+  .site-footer__col a,
+  .site-footer__legal-nav a {
+    display: inline-block;
+    padding-block: 0.35rem;
   }
 
   address {

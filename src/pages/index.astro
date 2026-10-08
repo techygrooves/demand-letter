@@ -10,47 +10,35 @@ import ContactSection from '@/components/sections/ContactSection.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
 import FaqList from '@/components/FaqList.astro';
 import CtaBand from '@/components/CtaBand.astro';
-import { faqs, faqPlainText } from '@/data/faq';
+import { faqs } from '@/data/faq';
 import { url } from '@/lib/url';
 
 const featuredFaqs = faqs.filter((item) => item.featured);
-
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: featuredFaqs.map((item) => ({
-    '@type': 'Question',
-    name: item.question,
-    acceptedAnswer: { '@type': 'Answer', text: faqPlainText(item) },
-  })),
-};
 ---
 
 <BaseLayout
-  title="Attorney-Prepared Demand Letters for $500"
-  description="Get an attorney-prepared demand letter for a $500 flat fee. Hoffman Legal drafts individualized demand letters on firm letterhead for unpaid money, broken agreements, property damage and other Florida civil disputes."
+  title="Florida Demand Letter Attorney | $500 Flat Fee"
+  description={`Attorney-prepared demand letters in Florida for a $500 flat fee. Hoffman Legal handles money owed, breach of contract, landlord-tenant and business disputes.`}
 >
-  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
-
-  <!-- 1. Hero -->
+  {/* 1. Hero */}
   <HomeHero />
 
-  <!-- 2. Why an attorney-prepared demand letter matters -->
+  {/* 2. Why an attorney-prepared demand letter matters */}
   <WhyDemandLetter />
 
-  <!-- 3. Types of disputes -->
+  {/* 3. Types of disputes */}
   <DisputeTypes />
 
-  <!-- 4. What's included -->
+  {/* 4. What's included */}
   <IncludedSection />
 
-  <!-- 5. Process -->
+  {/* 5. Process */}
   <ProcessSteps tone="navy" />
 
-  <!-- 6. Why Hoffman Legal -->
+  {/* 6. Why Hoffman Legal */}
   <WhyChoose />
 
-  <!-- 7. FAQ -->
+  {/* 7. FAQ */}
   <section class="section section--stone" id="faq" aria-labelledby="faq-title">
     <div class="container faq-layout">
       <div class="faq-layout__intro">
@@ -67,10 +55,10 @@ const faqSchema = {
     </div>
   </section>
 
-  <!-- 8. Final CTA -->
+  {/* 8. Final CTA */}
   <CtaBand secondaryHref="#contact" />
 
-  <!-- 9. Contact (footer follows from the layout) -->
+  {/* 9. Contact (footer follows from the layout) */}
   <ContactSection />
 </BaseLayout>
 

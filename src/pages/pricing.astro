@@ -14,27 +14,12 @@ import { url } from '@/lib/url';
 
 const pricingFaqs = faqs.filter((item) => item.pricing);
 
-const offerSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Service',
-  name: offer.serviceName,
-  serviceType: 'Attorney-prepared demand letter',
-  provider: { '@type': 'LegalService', name: 'Hoffman Legal' },
-  areaServed: { '@type': 'State', name: 'Florida' },
-  offers: {
-    '@type': 'Offer',
-    price: offer.price,
-    priceCurrency: 'USD',
-    description: offer.scope.join('; '),
-  },
-};
 ---
 
 <BaseLayout
-  title="Transparent Pricing"
-  description={`Attorney-prepared demand letters for a ${offer.priceDisplay} fixed fee. See exactly what is included, what may require a separate engagement, and how secure payment works after case acceptance.`}
+  title="Attorney Demand Letter Flat Fee: $500"
+  description={`See what Hoffman Legal's $500 attorney demand letter includes, what requires a separate engagement, and how secure payment works after your matter is accepted.`}
 >
-  <script slot="head" type="application/ld+json" set:html={JSON.stringify(offerSchema)} />
 
   <PageHero eyebrow="Transparent Pricing" title={`One fixed fee. ${offer.priceDisplay}.`}>
     A clearly defined service at a clearly stated price. Your matter is reviewed for suitability before any payment is

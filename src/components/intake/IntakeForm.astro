@@ -24,7 +24,7 @@ const stateOptions = usStates.map(([value, label]) => ({ value, label }));
   </noscript>
 
   <div class="intake__shell" data-shell>
-    <!-- Progress -->
+    {/* Progress */}
     <div class="progress" role="group" aria-label="Form progress">
       <p class="progress__count" data-progress-count>Step 1 of {steps.length}</p>
       <div class="progress__bar" aria-hidden="true"><span data-progress-bar></span></div>
@@ -51,14 +51,14 @@ const stateOptions = usStates.map(([value, label]) => ({ value, label }));
 
     <form class="intake__form" data-form novalidate>
       <div class="error-summary" data-error-summary tabindex="-1" hidden>
-        <h3 class="error-summary__title">
+        <h2 class="error-summary__title">
           <Icon name="info" size={20} />
           Please correct the following:
-        </h3>
+        </h2>
         <ul role="list" data-error-list></ul>
       </div>
 
-      <!-- Step 1: Contact details -->
+      {/* Step 1: Contact details */}
       <section class="step" data-step="0" aria-labelledby="step-0-title">
         <header class="step__head">
           <h2 class="step__title" id="step-0-title" tabindex="-1">{steps[0].title}</h2>
@@ -96,7 +96,7 @@ const stateOptions = usStates.map(([value, label]) => ({ value, label }));
         </div>
       </section>
 
-      <!-- Step 2: Dispute type -->
+      {/* Step 2: Dispute type */}
       <section class="step" data-step="1" aria-labelledby="step-1-title" hidden>
         <header class="step__head">
           <h2 class="step__title" id="step-1-title" tabindex="-1">{steps[1].title}</h2>
@@ -105,7 +105,7 @@ const stateOptions = usStates.map(([value, label]) => ({ value, label }));
         <IntakeField name="disputeType" label="Type of dispute" as="select" required options={disputeOptions} />
       </section>
 
-      <!-- Step 3: Dispute information -->
+      {/* Step 3: Dispute information */}
       <section class="step" data-step="2" aria-labelledby="step-2-title" hidden>
         <header class="step__head">
           <h2 class="step__title" id="step-2-title" tabindex="-1">{steps[2].title}</h2>
@@ -194,7 +194,7 @@ const stateOptions = usStates.map(([value, label]) => ({ value, label }));
         </div>
       </section>
 
-      <!-- Step 4: Review and submit -->
+      {/* Step 4: Review and submit */}
       <section class="step" data-step="3" aria-labelledby="step-3-title" hidden>
         <header class="step__head">
           <h2 class="step__title" id="step-3-title" tabindex="-1">{steps[3].title}</h2>
@@ -236,7 +236,7 @@ const stateOptions = usStates.map(([value, label]) => ({ value, label }));
         </div>
       </section>
 
-      <!-- Spam trap: hidden from people and assistive technology. -->
+      {/* Spam trap: hidden from people and assistive technology. */}
       <div class="hp" aria-hidden="true">
         <label for="intake-hl-ref">Leave this field empty</label>
         <input type="text" id="intake-hl-ref" name="hl_ref" tabindex="-1" autocomplete="off" />
@@ -259,7 +259,7 @@ const stateOptions = usStates.map(([value, label]) => ({ value, label }));
       <p class="intake__saved" data-saved-note>Your answers are kept as you move between steps.</p>
     </form>
 
-    <!-- Outcomes -->
+    {/* Outcomes */}
     <section class="outcome" data-outcome="delivered" tabindex="-1" aria-labelledby="outcome-delivered-title" hidden>
       <span class="outcome__icon outcome__icon--ok"><Icon name="check" size={32} /></span>
       <p class="outcome__demo" data-demo-note hidden>
@@ -273,7 +273,7 @@ const stateOptions = usStates.map(([value, label]) => ({ value, label }));
       <ol class="outcome__next" role="list">
         <li><strong>Attorney review.</strong> Your information is reviewed and a conflict check is performed. We may ask follow-up questions.</li>
         <li><strong>Decision.</strong> If your matter is accepted, you will receive the engagement terms. If it is not a fit, we will let you know.</li>
-        <li><strong>Engagement and payment.</strong> {offer.payment.headline}. Representation begins only after a signed engagement agreement.</li>
+        <li><strong>Engagement and payment.</strong> Payment is requested only after your matter is accepted. Representation begins only after a signed engagement agreement.</li>
       </ol>
       <p class="outcome__note">
         Submitting this request does not create an attorney-client relationship. If you have an urgent deadline, please

@@ -59,6 +59,9 @@ const { headingLevel: Heading = 'h3', id = 'pricing-card' } = Astro.props;
 <style>
   .pricing-card {
     position: relative;
+    width: 100%;
+    max-width: 32rem;
+    margin-inline: auto;
     display: flex;
     flex-direction: column;
     border: 1px solid var(--color-line);

@@ -82,10 +82,8 @@ https://techygrooves.github.io/demand-letter/). Internal links use `url()` from 
 that sub-path. For a custom domain, set the repository variables `SITE_URL` and `BASE_PATH` (`/`) under
 Settings → Secrets and variables → Actions → Variables.
 
-## Deploying to Hostinger
+## Deploying to Hostinger (production)
 
-1. Set the production URL if it differs from the default in `astro.config.mjs`:
-   `SITE_URL=https://your-domain.com npm run build` (also update the `Sitemap:` line in `public/robots.txt`).
-2. Upload the **contents** of `dist/` (including the hidden `.htaccess`) to `public_html/`.
-
-The included `.htaccess` forces HTTPS, enforces trailing slashes, serves the custom 404 page and sets caching and security headers.
+The site is static: `npm run build` produces plain files in `dist/` that run on any Hostinger plan without a
+server runtime. See **[DEPLOYMENT.md](DEPLOYMENT.md)** for step-by-step build, upload, subdomain, SSL and form
+delivery instructions.
