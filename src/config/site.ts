@@ -40,66 +40,124 @@ export const offer = {
   priceLabel: 'Flat fee',
   /** Shown beneath the price. Keep it accurate to the engagement terms. */
   priceNote: 'One attorney-prepared demand letter. No hourly billing.',
+  /** The four headline promises shown in the hero. */
+  highlights: [
+    '$500 flat fee',
+    'Attorney-prepared demand letter',
+    'Individualized to your dispute',
+    'Professional Hoffman Legal letterhead',
+  ],
+  /** Short list used on the pricing card. */
   included: [
-    'Review of your facts and supporting documents by a Florida attorney',
-    'A persuasive demand letter drafted for your specific dispute',
-    'Prepared on Hoffman Legal letterhead and signed by the attorney',
-    'Clear deadline and next steps stated to the recipient',
-    'Delivery to the opposing party',
+    'Attorney review of your facts and supporting documents',
+    'A demand letter written for your specific dispute',
+    'Prepared on Hoffman Legal letterhead',
+    'Signed by attorney David Hoffman',
+    'A clear demand and a deadline to respond',
     'A copy of the final letter for your records',
   ],
+  /** Detailed breakdown used in the "What's included" section. */
+  includedDetail: [
+    {
+      icon: 'search',
+      title: 'Attorney review of your matter',
+      text: 'Your facts, timeline and supporting documents are reviewed by a Florida attorney before anything is written.',
+    },
+    {
+      icon: 'pen',
+      title: 'Individualized drafting',
+      text: 'Your letter is written for your dispute. It is not a fill-in-the-blank template with your name added.',
+    },
+    {
+      icon: 'letter',
+      title: 'Hoffman Legal letterhead',
+      text: 'The letter is issued on professional law firm letterhead, signaling that you have legal representation.',
+    },
+    {
+      icon: 'signature',
+      title: 'Attorney signature',
+      text: 'Attorney David Hoffman signs the final letter, putting the weight of a law firm behind your position.',
+    },
+    {
+      icon: 'target',
+      title: 'A specific, reasonable demand',
+      text: 'The letter states exactly what you are asking for and sets a clear deadline for the recipient to respond.',
+    },
+    {
+      icon: 'file',
+      title: 'A copy for your records',
+      text: 'You receive a copy of the final letter, creating a written record of your demand.',
+    },
+  ],
+  /** What the flat fee does not cover. */
+  excluded:
+    'The flat fee covers one demand letter. Lawsuits, court filings, extended negotiations and other representation are not included. If your matter needs more, we will discuss options and any additional fees with you before any further work begins.',
 } as const;
 
-/** Types of civil disputes promoted on the site. Order = display order. */
+/** Common situations where a demand letter may help. Order = display order. */
 export const disputeTypes = [
   {
     icon: 'invoice',
-    title: 'Unpaid Invoices & Debts',
-    text: 'Money owed for work performed, goods delivered or personal loans that were never repaid.',
+    title: 'Unpaid Invoices',
+    text: 'A client or customer has not paid for work you performed or goods you delivered.',
+  },
+  {
+    icon: 'cash',
+    title: 'Money Owed & Personal Loans',
+    text: 'Someone borrowed money or agreed to repay you and has not followed through.',
   },
   {
     icon: 'contract',
     title: 'Breach of Contract',
-    text: 'A party failed to perform under a written or verbal agreement and you have suffered a loss.',
+    text: 'A party did not perform under a written or verbal agreement, and you suffered a loss.',
   },
   {
     icon: 'home',
     title: 'Security Deposits & Leases',
-    text: 'Landlord and tenant disputes, including wrongfully withheld deposits and lease violations.',
+    text: 'A deposit was wrongfully withheld, or a lease obligation was not honored.',
   },
   {
     icon: 'tools',
-    title: 'Contractor Disputes',
-    text: 'Incomplete, defective or abandoned work by contractors, builders and service providers.',
+    title: 'Contractor & Home Improvement',
+    text: 'Work was left incomplete, performed poorly or abandoned after you paid.',
   },
   {
     icon: 'shield',
     title: 'Property Damage',
-    text: 'Damage to your vehicle, home or belongings caused by another person or business.',
+    text: 'Another person or business damaged your vehicle, home or personal property.',
   },
   {
     icon: 'cart',
-    title: 'Consumer & Business Disputes',
-    text: 'Refund refusals, defective products and business-to-business payment disputes.',
+    title: 'Consumer Disputes',
+    text: 'A seller refused a refund, failed to deliver or sold you a defective product.',
+  },
+  {
+    icon: 'building',
+    title: 'Business-to-Business Disputes',
+    text: 'A vendor, partner or customer has not met its payment or performance obligations.',
   },
 ] as const;
 
+/**
+ * Process steps. Avoid promising specific turnaround times here; timing is
+ * discussed with each client after review.
+ */
 export const steps = [
   {
-    title: 'Tell us about your dispute',
-    text: 'Share the essential facts, the amount at issue and any documents that support your position.',
+    title: 'Get started',
+    text: 'Tell us what happened, who is involved, what you are owed and what outcome you want.',
   },
   {
     title: 'Attorney review',
-    text: 'David Hoffman reviews your matter to confirm it is suitable for a demand letter.',
+    text: 'David Hoffman reviews your information and documents to confirm a demand letter is a suitable next step.',
   },
   {
-    title: 'Letter drafted and signed',
-    text: 'Your demand letter is prepared on firm letterhead, tailored to your facts and signed by the attorney.',
+    title: 'Drafting',
+    text: 'Your letter is drafted for your specific dispute, states your position clearly and requests a specific resolution.',
   },
   {
-    title: 'Demand delivered',
-    text: 'The letter is sent to the other party with a firm deadline to resolve the matter.',
+    title: 'Signed and sent',
+    text: 'The final letter is signed on Hoffman Legal letterhead and sent to the other party, and you receive a copy.',
   },
 ] as const;
 
@@ -123,7 +181,8 @@ export const legalNav: NavItem[] = [
 ];
 
 export const cta = {
-  primary: { label: 'Get Started for $500', href: '/get-started/' },
+  primary: { label: 'Get Started — $500', href: '/get-started/' },
+  secondary: { label: 'Discuss Your Situation', href: '/contact/' },
   short: { label: 'Get Started', href: '/get-started/' },
 } as const;
 

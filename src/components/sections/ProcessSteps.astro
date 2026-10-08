@@ -1,22 +1,28 @@
 ---
 import SectionHeading from '@/components/SectionHeading.astro';
-import { steps } from '@/config/site';
+import Icon from '@/components/Icon.astro';
+import { steps, cta } from '@/config/site';
 
 interface Props {
   /** Show the section heading (hide when the page hero already introduces the topic). */
   showHeading?: boolean;
-  tone?: 'default' | 'stone';
+  tone?: 'default' | 'stone' | 'navy';
+  showCta?: boolean;
 }
 
-const { showHeading = true, tone = 'stone' } = Astro.props;
+const { showHeading = true, tone = 'stone', showCta = true } = Astro.props;
 ---
 
-<section class:list={['section', { 'section--stone': tone === 'stone' }]} aria-labelledby="process-title">
+<section
+  class:list={['section', 'process', `section--${tone}`]}
+  id="process"
+  aria-labelledby="process-title"
+>
   <div class="container">
     {
       showHeading ? (
-        <SectionHeading eyebrow="How It Works" title="A straightforward process, start to finish" id="process-title">
-          Getting a demand letter should be simple. Here is what to expect.
+        <SectionHeading eyebrow="How It Works" title="A simple, four-step process" id="process-title">
+          Getting a demand letter should be straightforward. Here is what to expect from start to finish.
         </SectionHeading>
       ) : (
         <h2 id="process-title" class="visually-hidden">
@@ -25,12 +31,12 @@ const { showHeading = true, tone = 'stone' } = Astro.props;
       )
     }
 
-    <ol class="steps" role="list">
+    <ol class="steps reveal" role="list">
       {
         steps.map((step, index) => (
           <li class="step">
-            <span class="step__number" aria-hidden="true">
-              {String(index + 1).padStart(2, '0')}
+            <span class="step__marker" aria-hidden="true">
+              {index + 1}
             </span>
             <h3>
               <span class="visually-hidden">Step {index + 1}: </span>
@@ -41,15 +47,31 @@ const { showHeading = true, tone = 'stone' } = Astro.props;
         ))
       }
     </ol>
+
+    {
+      showCta && (
+        <div class="process__cta">
+          <a href={cta.primary.href} class="btn btn--accent btn--lg">
+            {cta.primary.label}
+            <Icon name="arrow" size={18} />
+          </a>
+          <p>Timing depends on your matter. We will tell you what to expect after reviewing it.</p>
+        </div>
+      )
+    }
   </div>
 </section>
 
 <style>
+  .section--default {
+    background: transparent;
+  }
+
   .steps {
+    position: relative;
     display: grid;
     gap: var(--space-6);
     padding: 0;
-    counter-reset: step;
   }
 
   @media (min-width: 40rem) {
@@ -61,26 +83,91 @@ const { showHeading = true, tone = 'stone' } = Astro.props;
   @media (min-width: 64rem) {
     .steps {
       grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-5);
+    }
+
+    /* Connecting rule between markers. */
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      right: 1.5rem;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.2;
     }
   }
 
   .step {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
-    padding-top: var(--space-5);
-    border-top: 1px solid var(--color-navy-900);
   }
 
-  .step__number {
+  .step__marker {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: var(--space-3);
+    border: 1px solid var(--color-brass-500);
+    border-radius: 50%;
+    background: var(--color-paper);
     font-family: var(--font-serif);
-    font-size: var(--text-2xl);
+    font-size: var(--text-xl);
     line-height: 1;
-    color: var(--color-brass-600);
+    color: var(--color-brass-700);
+    transition:
+      background-color var(--duration) var(--ease),
+      color var(--duration) var(--ease);
+  }
+
+  .section--stone .step__marker {
+    background: var(--color-stone);
+  }
+
+  .step:hover .step__marker {
+    background: var(--color-brass-500);
+    color: var(--color-navy-950);
   }
 
   .step p {
-    color: var(--color-text-muted);
+    max-width: 22rem;
     font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  /* Navy variant */
+  .section--navy .step__marker {
+    background: var(--color-navy-900);
+    color: var(--color-brass-500);
+  }
+
+  .section--navy .step:hover .step__marker {
+    background: var(--color-brass-500);
+    color: var(--color-navy-950);
+  }
+
+  .section--navy .step p {
+    color: var(--color-text-inverse-muted);
+  }
+
+  .process__cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4) var(--space-6);
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid rgb(127 127 127 / 0.2);
+  }
+
+  .process__cta p {
+    flex: 1 1 18rem;
+    font-size: var(--text-sm);
+    opacity: 0.8;
   }
 </style>

@@ -1,0 +1,42 @@
+---
+import SectionHeading from '@/components/SectionHeading.astro';
+import ContactOptions from '@/components/ContactOptions.astro';
+import { cta } from '@/config/site';
+---
+
+<section class="section" id="contact" aria-labelledby="contact-title">
+  <div class="container">
+    <div class="contact__head">
+      <SectionHeading eyebrow="Contact" title="Discuss your situation" id="contact-title">
+        Not sure whether a demand letter is right for your dispute? Call or email the firm with a brief description of
+        what happened.
+      </SectionHeading>
+      <a href={cta.primary.href} class="btn btn--lg">{cta.primary.label}</a>
+    </div>
+    <ContactOptions />
+    <p class="contact__note">
+      Please do not send confidential information until an attorney-client relationship has been established.
+    </p>
+  </div>
+</section>
+
+<style>
+  .contact__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-5) var(--space-7);
+    margin-bottom: var(--space-7);
+  }
+
+  .contact__head :global(.section-heading) {
+    margin-bottom: 0;
+  }
+
+  .contact__note {
+    margin-top: var(--space-5);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+</style>

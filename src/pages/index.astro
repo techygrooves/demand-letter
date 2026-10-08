@@ -1,72 +1,106 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import HomeHero from '@/components/sections/HomeHero.astro';
+import WhyDemandLetter from '@/components/sections/WhyDemandLetter.astro';
 import DisputeTypes from '@/components/sections/DisputeTypes.astro';
+import IncludedSection from '@/components/sections/IncludedSection.astro';
 import ProcessSteps from '@/components/sections/ProcessSteps.astro';
-import AttorneyIntro from '@/components/sections/AttorneyIntro.astro';
+import WhyChoose from '@/components/sections/WhyChoose.astro';
+import ContactSection from '@/components/sections/ContactSection.astro';
 import SectionHeading from '@/components/SectionHeading.astro';
-import PricingCard from '@/components/PricingCard.astro';
 import FaqList from '@/components/FaqList.astro';
 import CtaBand from '@/components/CtaBand.astro';
 import { faqs } from '@/data/faq';
-import { offer } from '@/config/site';
 
 const featuredFaqs = faqs.filter((item) => item.featured);
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: featuredFaqs.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: { '@type': 'Answer', text: item.answer },
+  })),
+};
 ---
 
-<BaseLayout>
+<BaseLayout
+  title="Attorney-Prepared Demand Letters for $500"
+  description="Get an attorney-prepared demand letter for a $500 flat fee. Hoffman Legal drafts individualized demand letters on firm letterhead for unpaid money, broken agreements, property damage and other Florida civil disputes."
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <!-- 1. Hero -->
   <HomeHero />
 
-  <DisputeTypes />
+  <!-- 2. Why an attorney-prepared demand letter matters -->
+  <WhyDemandLetter />
 
-  <ProcessSteps />
+  <!-- 3. Common situations -->
+  <DisputeTypes contactHref="#contact" />
 
-  <section class="section" aria-labelledby="pricing-title">
-    <div class="container pricing">
-      <div class="pricing__copy">
-        <SectionHeading eyebrow="Transparent Pricing" title={`${offer.priceDisplay}. One letter. No surprises.`} id="pricing-title">
-          Legal fees should never be a mystery. Your demand letter is prepared for a single flat fee, so you know the
-          full cost before you begin.
+  <!-- 4. What's included -->
+  <IncludedSection />
+
+  <!-- 5. Process -->
+  <ProcessSteps tone="navy" />
+
+  <!-- 6. Why Hoffman Legal -->
+  <WhyChoose />
+
+  <!-- 7. FAQ -->
+  <section class="section section--stone" id="faq" aria-labelledby="faq-title">
+    <div class="container faq-layout">
+      <div class="faq-layout__intro">
+        <SectionHeading eyebrow="Questions" title="Frequently asked questions" id="faq-title">
+          Straight answers about demand letters and how the flat-fee service works.
         </SectionHeading>
-        <a href="/pricing/" class="pricing__link">Learn more about pricing &rarr;</a>
+        <p class="faq-layout__more">
+          <a href="/faq/">View all questions</a>
+          <span aria-hidden="true">·</span>
+          <a href="#contact">Ask us directly</a>
+        </p>
       </div>
-      <PricingCard />
-    </div>
-  </section>
-
-  <AttorneyIntro />
-
-  <section class="section section--stone" aria-labelledby="faq-title">
-    <div class="container container--narrow">
-      <SectionHeading eyebrow="Questions" title="Frequently asked questions" id="faq-title" />
       <FaqList items={featuredFaqs} />
-      <p class="faq-more"><a href="/faq/">View all questions &rarr;</a></p>
     </div>
   </section>
 
-  <CtaBand />
+  <!-- 8. Final CTA -->
+  <CtaBand secondaryHref="#contact" />
+
+  <!-- 9. Contact (footer follows from the layout) -->
+  <ContactSection />
 </BaseLayout>
 
 <style>
-  .pricing {
+  .faq-layout {
     display: grid;
-    gap: var(--space-7);
-    align-items: center;
+    gap: var(--space-6);
   }
 
-  @media (min-width: 56rem) {
-    .pricing {
-      grid-template-columns: 1fr minmax(22rem, 28rem);
+  @media (min-width: 64rem) {
+    .faq-layout {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
       gap: var(--space-9);
+      align-items: start;
+    }
+
+    .faq-layout__intro {
+      position: sticky;
+      top: calc(var(--header-height) + var(--space-5));
     }
   }
 
-  .pricing__link,
-  .faq-more a {
+  .faq-layout__more {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: calc(var(--space-7) * -0.5);
     font-weight: 600;
   }
 
-  .faq-more {
-    margin-top: var(--space-6);
+  .faq-layout__more span {
+    color: var(--color-line-strong);
   }
 </style>

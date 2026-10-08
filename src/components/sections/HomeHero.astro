@@ -2,7 +2,8 @@
 import Icon from '@/components/Icon.astro';
 import { cta, firm, offer } from '@/config/site';
 
-const assurances = ['Prepared and signed by a Florida attorney', 'One transparent flat fee', 'Civil disputes of many kinds'];
+// The first highlight ($500 flat fee) is rendered as the large price figure.
+const highlights = offer.highlights.slice(1);
 ---
 
 <section class="hero" aria-labelledby="hero-title">
@@ -10,46 +11,54 @@ const assurances = ['Prepared and signed by a Florida attorney', 'One transparen
     <div class="hero__copy">
       <p class="eyebrow">Florida Attorney Demand Letters</p>
       <h1 id="hero-title">
-        When they owe you, <em>an attorney’s letter</em> gets their attention.
+        Get an Attorney-Prepared Demand Letter for <span class="hero__price">{offer.priceDisplay}</span>
       </h1>
       <p class="lead">
-        {firm.name} prepares professional, attorney-signed demand letters for unpaid debts, broken agreements, withheld
-        deposits and other civil disputes. One flat fee, no hourly billing.
+        Whether you’re dealing with unpaid money, a broken agreement, property damage, or another civil dispute,
+        {firm.name} can help you take a professional first step toward resolution.
       </p>
-      <div class="btn-row">
-        <a href={cta.primary.href} class="btn btn--lg">{cta.primary.label}</a>
-        <a href="/how-it-works/" class="btn btn--outline btn--lg">See How It Works</a>
+      <div class="btn-row hero__actions">
+        <a href={cta.primary.href} class="btn btn--lg">
+          {cta.primary.label}
+          <Icon name="arrow" size={18} class="btn__arrow" />
+        </a>
+        <a href="#contact" class="btn btn--outline btn--lg">{cta.secondary.label}</a>
       </div>
-      <ul class="hero__assurances" role="list">
-        {
-          assurances.map((item) => (
-            <li>
-              <Icon name="check" size={18} />
-              {item}
-            </li>
-          ))
-        }
-      </ul>
+      <p class="hero__call">
+        Prefer to talk first? Call <a href={firm.phone.href}>{firm.phone.display}</a>
+      </p>
     </div>
 
-    <aside class="hero__letter" aria-label="Pricing summary">
-      <div class="letter">
-        <div class="letter__head">
-          <span class="letter__firm">{firm.name}</span>
-          <span class="letter__rule"></span>
-        </div>
-        <p class="letter__re">RE: Formal Demand for Payment</p>
-        <div class="letter__lines" aria-hidden="true">
-          <span></span><span></span><span></span><span class="short"></span>
-        </div>
-        <div class="letter__price">
-          <span class="letter__amount">{offer.priceDisplay}</span>
-          <span class="letter__label">Flat fee per letter</span>
-        </div>
-        <p class="letter__sign">
-          <span class="letter__signature">{firm.attorney}</span>
-          <span class="letter__title">Attorney at Law</span>
+    <aside class="offer" aria-labelledby="offer-title">
+      <div class="offer__letterhead" aria-hidden="true">
+        <span class="offer__firm">{firm.name}</span>
+        <span class="offer__address">{firm.address.city}, Florida</span>
+      </div>
+
+      <div class="offer__body">
+        <h2 id="offer-title" class="visually-hidden">What you get</h2>
+        <p class="offer__price">
+          <span class="offer__amount">{offer.priceDisplay}</span>
+          <span class="offer__label">{offer.priceLabel} · No hourly billing</span>
         </p>
+        <ul class="offer__list" role="list">
+          {
+            highlights.map((item) => (
+              <li>
+                <span class="offer__check">
+                  <Icon name="check" size={16} />
+                </span>
+                {item}
+              </li>
+            ))
+          }
+        </ul>
+        <p class="offer__note">Subject to attorney review and a conflict check.</p>
+      </div>
+
+      <div class="offer__sign" aria-hidden="true">
+        <span class="offer__signature">{firm.attorney}</span>
+        <span class="offer__title">Attorney at Law</span>
       </div>
     </aside>
   </div>
@@ -58,14 +67,32 @@ const assurances = ['Prepared and signed by a Florida attorney', 'One transparen
 <style>
   .hero {
     position: relative;
-    padding-block: clamp(3.5rem, 2rem + 6vw, 7.5rem);
+    padding-block: clamp(3rem, 1.8rem + 5.5vw, 7rem) clamp(3.5rem, 2rem + 6vw, 7.5rem);
     overflow: hidden;
     background:
-      radial-gradient(70rem 40rem at 110% -10%, rgb(184 149 90 / 0.12), transparent 60%),
+      radial-gradient(60rem 36rem at 105% -5%, rgb(184 149 90 / 0.14), transparent 60%),
+      radial-gradient(40rem 30rem at -10% 110%, rgb(31 58 97 / 0.06), transparent 60%),
       linear-gradient(180deg, var(--color-paper), var(--color-stone));
   }
 
+  /* Faint ruled lines evoke legal paper without competing with content. */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      180deg,
+      transparent 0,
+      transparent 39px,
+      rgb(15 31 54 / 0.035) 39px,
+      rgb(15 31 54 / 0.035) 40px
+    );
+    mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
+    pointer-events: none;
+  }
+
   .hero__grid {
+    position: relative;
     display: grid;
     gap: var(--space-8);
     align-items: center;
@@ -73,8 +100,8 @@ const assurances = ['Prepared and signed by a Florida attorney', 'One transparen
 
   @media (min-width: 64rem) {
     .hero__grid {
-      grid-template-columns: 1.25fr 1fr;
-      gap: var(--space-9);
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: clamp(3rem, 6vw, 7rem);
     }
   }
 
@@ -82,110 +109,108 @@ const assurances = ['Prepared and signed by a Florida attorney', 'One transparen
     margin-top: var(--space-5);
   }
 
-  .hero__copy .btn-row {
+  h1 {
+    max-width: 16ch;
+    font-size: clamp(2.5rem, 1.7rem + 3.4vw, 4.5rem);
+  }
+
+  .hero__price {
+    font-style: italic;
+    color: var(--color-brass-700);
+    white-space: nowrap;
+  }
+
+  .hero__copy .lead {
+    max-width: 34rem;
+  }
+
+  .hero__actions {
     margin-top: var(--space-6);
   }
 
-  h1 em {
-    font-style: italic;
-    color: var(--color-brass-700);
+  .hero__actions :global(.btn__arrow) {
+    transition: transform var(--duration) var(--ease);
   }
 
-  .hero__assurances {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3) var(--space-5);
-    padding: 0;
-    list-style: none;
+  .hero__actions .btn:hover :global(.btn__arrow) {
+    transform: translateX(3px);
+  }
+
+  .hero__call {
     font-size: var(--text-sm);
     color: var(--color-text-muted);
   }
 
-  .hero__assurances li {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
+  .hero__call a {
+    font-weight: 600;
+    white-space: nowrap;
   }
 
-  .hero__assurances :global(svg) {
-    color: var(--color-brass-600);
-  }
-
-  /* Stylised letter: a visual cue for the product, built in CSS (no image request). */
-  .hero__letter {
+  /* ---------- Offer card, styled as firm letterhead ---------- */
+  .offer {
     position: relative;
-    max-width: 26rem;
     width: 100%;
+    max-width: 28rem;
     margin-inline: auto;
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-lg);
+    transition:
+      transform 300ms var(--ease),
+      box-shadow 300ms var(--ease);
   }
 
-  .hero__letter::before {
+  .offer::before {
     content: '';
     position: absolute;
-    inset: 1.25rem -1.25rem -1.25rem 1.25rem;
+    inset: 1rem -1rem -1rem 1rem;
+    z-index: -1;
     border: 1px solid var(--color-line-strong);
     border-radius: var(--radius-md);
   }
 
-  .letter {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-5);
-    padding: clamp(1.75rem, 1.2rem + 2vw, 2.5rem);
-    border-radius: var(--radius-md);
-    background: var(--color-surface);
-    box-shadow: var(--shadow-lg);
+  @media (hover: hover) {
+    .offer:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 32px 70px -28px rgb(15 31 54 / 0.42);
+    }
   }
 
-  .letter__head {
+  .offer__letterhead {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-3);
+    gap: var(--space-1);
+    padding: var(--space-5) var(--space-5) var(--space-4);
+    border-bottom: 1px solid var(--color-line);
+    border-top: 4px solid var(--color-navy-900);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
   }
 
-  .letter__firm {
+  .offer__firm {
     font-family: var(--font-serif);
     font-size: var(--text-lg);
-    letter-spacing: 0.18em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--color-navy-900);
   }
 
-  .letter__rule {
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--color-brass-500), transparent);
-  }
-
-  .letter__re {
-    font-size: var(--text-xs);
-    font-weight: 600;
-    letter-spacing: 0.08em;
+  .offer__address {
+    font-size: 0.6875rem;
+    letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
-    color: var(--color-navy-800);
+    color: var(--color-text-muted);
   }
 
-  .letter__lines {
-    display: grid;
-    gap: 0.6rem;
+  .offer__body {
+    padding: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
   }
 
-  .letter__lines span {
-    height: 0.4rem;
-    border-radius: 99px;
-    background: var(--color-stone);
-  }
-
-  .letter__lines .short {
-    width: 60%;
-  }
-
-  .letter__price {
+  .offer__price {
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
+    align-items: center;
+    gap: var(--space-2);
     padding: var(--space-5);
     border: 1px solid var(--color-brass-100);
     border-radius: var(--radius-sm);
@@ -193,14 +218,16 @@ const assurances = ['Prepared and signed by a Florida attorney', 'One transparen
     text-align: center;
   }
 
-  .letter__amount {
+  .offer__amount {
     font-family: var(--font-serif);
-    font-size: clamp(3rem, 2.4rem + 2.6vw, 4rem);
+    font-size: clamp(3.5rem, 2.8rem + 3vw, 4.75rem);
+    font-weight: 500;
     line-height: 1;
+    letter-spacing: -0.02em;
     color: var(--color-navy-900);
   }
 
-  .letter__label {
+  .offer__label {
     font-size: var(--text-xs);
     font-weight: 600;
     letter-spacing: var(--tracking-wide);
@@ -208,19 +235,55 @@ const assurances = ['Prepared and signed by a Florida attorney', 'One transparen
     color: var(--color-brass-700);
   }
 
-  .letter__sign {
-    display: flex;
-    flex-direction: column;
+  .offer__list {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+    padding: 0;
+    list-style: none;
+    font-weight: 500;
+    color: var(--color-navy-900);
   }
 
-  .letter__signature {
+  .offer__list li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .offer__check {
+    display: inline-grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: var(--color-navy-900);
+    color: var(--color-brass-500);
+  }
+
+  .offer__note {
+    margin-top: var(--space-5);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
+  .offer__sign {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-4) clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem) var(--space-5);
+    border-top: 1px dashed var(--color-line);
+  }
+
+  .offer__signature {
     font-family: var(--font-serif);
-    font-style: italic;
     font-size: var(--text-xl);
+    font-style: italic;
     color: var(--color-navy-800);
   }
 
-  .letter__title {
+  .offer__title {
     font-size: var(--text-xs);
     color: var(--color-text-muted);
   }

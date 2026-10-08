@@ -1,15 +1,19 @@
 ---
 /** Closing call-to-action band, reused at the bottom of most pages. */
+import Icon from './Icon.astro';
 import { cta, firm, offer } from '@/config/site';
 
 interface Props {
   title?: string;
   text?: string;
+  /** Target for the secondary "Discuss" button. Use '#contact' on pages with a contact section. */
+  secondaryHref?: string;
 }
 
 const {
-  title = 'Put your demand in writing, from an attorney.',
-  text = `A firm, professional demand letter is often the fastest way to get the other side's attention. One flat fee of ${offer.priceDisplay}.`,
+  title = 'Take a professional first step toward resolution.',
+  text = `Put your position in writing with an attorney-prepared demand letter on Hoffman Legal letterhead, for one flat fee of ${offer.priceDisplay}.`,
+  secondaryHref = cta.secondary.href,
 } = Astro.props;
 ---
 
@@ -20,23 +24,48 @@ const {
       <h2 id="cta-band-title">{title}</h2>
       <p class="lead">{text}</p>
     </div>
-    <div class="btn-row">
-      <a href={cta.primary.href} class="btn btn--accent btn--lg">{cta.primary.label}</a>
-      <a href={firm.phone.href} class="btn btn--outline btn--lg">Call {firm.phone.display}</a>
+    <div class="cta-band__actions">
+      <div class="btn-row">
+        <a href={cta.primary.href} class="btn btn--accent btn--lg">
+          {cta.primary.label}
+          <Icon name="arrow" size={18} />
+        </a>
+        <a href={secondaryHref} class="btn btn--outline btn--lg">{cta.secondary.label}</a>
+      </div>
+      <p class="cta-band__phone">
+        Or call <a href={firm.phone.href}>{firm.phone.display}</a>
+      </p>
     </div>
   </div>
 </section>
 
 <style>
   .cta-band {
+    position: relative;
+    overflow: hidden;
     background:
-      radial-gradient(50rem 30rem at 85% 120%, rgb(184 149 90 / 0.18), transparent 60%),
+      radial-gradient(50rem 30rem at 85% 120%, rgb(184 149 90 / 0.2), transparent 60%),
       var(--color-navy-900);
   }
 
+  /* Oversized section-sign watermark for a little visual depth. */
+  .cta-band::before {
+    content: '§';
+    position: absolute;
+    right: -2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-serif);
+    font-size: clamp(16rem, 30vw, 30rem);
+    line-height: 1;
+    color: rgb(184 149 90 / 0.06);
+    pointer-events: none;
+  }
+
   .cta-band__inner {
+    position: relative;
     display: grid;
-    gap: var(--space-6);
+    gap: var(--space-7);
     align-items: end;
   }
 
@@ -46,6 +75,16 @@ const {
 
   h2 {
     max-width: 20ch;
+  }
+
+  .cta-band__phone {
+    margin-top: var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--color-text-inverse-muted);
+  }
+
+  .cta-band__phone a {
+    font-weight: 600;
   }
 
   @media (min-width: 64rem) {
