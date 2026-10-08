@@ -28,18 +28,24 @@ export const site = {
   title: 'Attorney Demand Letters in Florida | $500 Flat Fee | Hoffman Legal',
   shortTitle: 'Demand Letters',
   description:
-    'Attorney-prepared demand letters for a $500 flat fee. Hoffman Legal drafts and signs firm demand letters for unpaid debts, contract breaches, deposits, property damage and other Florida civil disputes.',
+    'Attorney-prepared demand letters for a $500 flat fee. Hoffman Legal prepares individualized demand letters on firm letterhead for unpaid debts, contract breaches, deposits, property damage and other Florida civil disputes.',
   locale: 'en_US',
   /** Image path (from /public) for social sharing previews. */
   ogImage: '/og-image.png',
 } as const;
 
+/**
+ * The $500 service. This is the single source of truth for scope and pricing
+ * language. Do not add promises (delivery method, deadlines, revisions,
+ * follow-up correspondence) here without the attorney's confirmation.
+ */
 export const offer = {
   price: 500,
   priceDisplay: '$500',
   priceLabel: 'Flat fee',
-  /** Shown beneath the price. Keep it accurate to the engagement terms. */
-  priceNote: 'One attorney-prepared demand letter. No hourly billing.',
+  serviceName: 'Attorney Demand Letter',
+  /** Shown beneath the price. */
+  priceNote: 'A fixed fee for one attorney-prepared demand letter. No hourly billing.',
   /** The four headline promises shown in the hero. */
   highlights: [
     '$500 flat fee',
@@ -47,51 +53,52 @@ export const offer = {
     'Individualized to your dispute',
     'Professional Hoffman Legal letterhead',
   ],
-  /** Short list used on the pricing card. */
-  included: [
-    'Attorney review of your facts and supporting documents',
-    'A demand letter written for your specific dispute',
-    'Prepared on Hoffman Legal letterhead',
-    'Signed by attorney David Hoffman',
-    'A clear demand and a deadline to respond',
-    'A copy of the final letter for your records',
+  /** Core service scope. Used on the pricing card and everywhere scope is listed. */
+  scope: [
+    'One attorney-prepared demand letter',
+    'Individualized review of your dispute',
+    'Professional Hoffman Legal letterhead',
+    'Clear statement of your requested resolution',
   ],
-  /** Detailed breakdown used in the "What's included" section. */
-  includedDetail: [
-    {
-      icon: 'search',
-      title: 'Attorney review of your matter',
-      text: 'Your facts, timeline and supporting documents are reviewed by a Florida attorney before anything is written.',
-    },
-    {
-      icon: 'pen',
-      title: 'Individualized drafting',
-      text: 'Your letter is written for your dispute. It is not a fill-in-the-blank template with your name added.',
-    },
+  /** Expanded descriptions of each scope item, in the same order as `scope`. */
+  scopeDetail: [
     {
       icon: 'letter',
-      title: 'Hoffman Legal letterhead',
-      text: 'The letter is issued on professional law firm letterhead, signaling that you have legal representation.',
+      title: 'One attorney-prepared demand letter',
+      text: 'A single demand letter prepared by an attorney for your matter, written to communicate your position clearly and professionally.',
     },
     {
-      icon: 'signature',
-      title: 'Attorney signature',
-      text: 'Attorney David Hoffman signs the final letter, putting the weight of a law firm behind your position.',
-    },
-    {
-      icon: 'target',
-      title: 'A specific, reasonable demand',
-      text: 'The letter states exactly what you are asking for and sets a clear deadline for the recipient to respond.',
+      icon: 'search',
+      title: 'Individualized review of your dispute',
+      text: 'Your facts, the opposing party and your supporting documents are reviewed by a Florida attorney before the letter is written.',
     },
     {
       icon: 'file',
-      title: 'A copy for your records',
-      text: 'You receive a copy of the final letter, creating a written record of your demand.',
+      title: 'Professional Hoffman Legal letterhead',
+      text: 'The letter is issued on Hoffman Legal letterhead, showing the other party that you have legal representation.',
+    },
+    {
+      icon: 'target',
+      title: 'Clear statement of your requested resolution',
+      text: 'The letter states what you are asking for, whether payment, a refund, repairs or performance under an agreement.',
     },
   ],
-  /** What the flat fee does not cover. */
-  excluded:
-    'The flat fee covers one demand letter. Lawsuits, court filings, extended negotiations and other representation are not included. If your matter needs more, we will discuss options and any additional fees with you before any further work begins.',
+  /** Work outside the standard service that may require a separate engagement. */
+  additionalWork: [
+    { title: 'Litigation', text: 'Filing or defending a lawsuit, including small claims, and any court appearances.' },
+    { title: 'Settlement negotiations', text: 'Ongoing negotiation with the other party or their attorney after the letter.' },
+    { title: 'Additional letters', text: 'Follow-up letters, replies or other correspondence beyond the one demand letter.' },
+    { title: 'Extensive investigation', text: 'Substantial fact-finding, records gathering or review of large volumes of documents.' },
+  ],
+  additionalWorkNote:
+    'If your matter needs more than the standard service, we will explain the options and any additional fees before any further work begins. Additional work requires a separate agreement.',
+  /** Payment and engagement assurances. Wording reviewed for consistency site-wide. */
+  payment: {
+    headline: 'Secure Payment Following Case Acceptance',
+    noUpfront: 'No payment is required to submit a request.',
+    suitability: 'Suitability is reviewed before any payment is requested.',
+    engagement: 'Representation is subject to a signed engagement agreement.',
+  },
 } as const;
 
 /** Common situations where a demand letter may help. Order = display order. */
@@ -139,25 +146,33 @@ export const disputeTypes = [
 ] as const;
 
 /**
- * Process steps. Avoid promising specific turnaround times here; timing is
- * discussed with each client after review.
+ * Process steps. Avoid promising specific turnaround times or delivery
+ * methods here; timing is discussed with each client after review.
  */
 export const steps = [
   {
-    title: 'Get started',
-    text: 'Tell us what happened, who is involved, what you are owed and what outcome you want.',
+    icon: 'clipboard',
+    title: 'Tell Us About Your Dispute',
+    text: 'Complete a short online intake describing the dispute, the opposing party and the resolution you want.',
+    details: ['What happened and when', 'Who the opposing party is', 'What you want them to do', 'No payment required to submit'],
   },
   {
-    title: 'Attorney review',
-    text: 'David Hoffman reviews your information and documents to confirm a demand letter is a suitable next step.',
+    icon: 'search',
+    title: 'Attorney Reviews the Matter',
+    text: `Hoffman Legal reviews your information to determine whether the matter is suitable for the $500 fixed-fee service.`,
+    details: ['Review of your facts and documents', 'Conflict check', 'We may ask follow-up questions', 'You will be told if it is not a fit'],
   },
   {
-    title: 'Drafting',
-    text: 'Your letter is drafted for your specific dispute, states your position clearly and requests a specific resolution.',
+    icon: 'lock',
+    title: 'Engagement and Payment',
+    text: 'If your matter is accepted, you receive the engagement terms and complete secure payment of the $500 fee.',
+    details: ['Clear engagement terms', 'Signed engagement agreement', 'Secure Payment Following Case Acceptance'],
   },
   {
-    title: 'Signed and sent',
-    text: 'The final letter is signed on Hoffman Legal letterhead and sent to the other party, and you receive a copy.',
+    icon: 'pen',
+    title: 'Preparation of Demand Letter',
+    text: 'The attorney prepares an individualized demand letter addressing the relevant facts, your legal position where appropriate and your requested resolution.',
+    details: ['Individualized to your dispute', 'Prepared on Hoffman Legal letterhead', 'States your requested resolution'],
   },
 ] as const;
 
@@ -182,6 +197,7 @@ export const legalNav: NavItem[] = [
 
 export const cta = {
   primary: { label: 'Get Started — $500', href: '/get-started/' },
+  request: { label: 'Start Your Demand Letter Request', href: '/get-started/' },
   secondary: { label: 'Discuss Your Situation', href: '/contact/' },
   short: { label: 'Get Started', href: '/get-started/' },
 } as const;

@@ -2,34 +2,95 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHero from '@/components/PageHero.astro';
 import PricingCard from '@/components/PricingCard.astro';
+import ScopeComparison from '@/components/ScopeComparison.astro';
+import PaymentAssurance from '@/components/PaymentAssurance.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import FaqList from '@/components/FaqList.astro';
 import CtaBand from '@/components/CtaBand.astro';
+import Icon from '@/components/Icon.astro';
 import { offer } from '@/config/site';
+import { faqs } from '@/data/faq';
+
+const pricingFaqs = faqs.filter((item) => item.pricing);
+
+const offerSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: offer.serviceName,
+  serviceType: 'Attorney-prepared demand letter',
+  provider: { '@type': 'LegalService', name: 'Hoffman Legal' },
+  areaServed: { '@type': 'State', name: 'Florida' },
+  offers: {
+    '@type': 'Offer',
+    price: offer.price,
+    priceCurrency: 'USD',
+    description: offer.scope.join('; '),
+  },
+};
 ---
 
 <BaseLayout
-  title="Pricing"
-  description={`Attorney-prepared demand letters for a ${offer.priceDisplay} flat fee. See exactly what is included, with no hourly billing.`}
+  title="Transparent Pricing"
+  description={`Attorney-prepared demand letters for a ${offer.priceDisplay} fixed fee. See exactly what is included, what may require a separate engagement, and how secure payment works after case acceptance.`}
 >
-  <PageHero eyebrow="Pricing" title={`One flat fee: ${offer.priceDisplay}`}>
-    Know the full cost before you begin. No retainers, no hourly billing for your demand letter.
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(offerSchema)} />
+
+  <PageHero eyebrow="Transparent Pricing" title={`One fixed fee. ${offer.priceDisplay}.`}>
+    A clearly defined service at a clearly stated price. Your matter is reviewed for suitability before any payment is
+    requested.
   </PageHero>
 
-  <section class="section" aria-label="Pricing details">
-    <div class="container pricing">
-      <div class="prose">
-        <h2>What you get</h2>
-        <p>
-          Your flat fee covers attorney review of your matter and a professionally drafted demand letter tailored to
-          your facts, prepared on firm letterhead and signed by the attorney.
-        </p>
-        <h2>What is not included</h2>
-        <p>
-          Litigation, court filings, extended negotiation and representation beyond the demand letter are not included.
-          If your matter requires further work, we will discuss the options and any additional fees with you in advance.
-        </p>
-        <!-- TODO: Confirm turnaround time, delivery method and refund policy with the attorney. -->
+  <section class="section" aria-labelledby="price-overview-title">
+    <div class="container overview">
+      <div class="overview__copy">
+        <SectionHeading eyebrow="The Standard Service" title="What your fee covers" id="price-overview-title">
+          The {offer.priceDisplay} fee covers one attorney-prepared demand letter, written for your dispute and issued on
+          Hoffman Legal letterhead.
+        </SectionHeading>
+
+        <ul class="overview__points" role="list">
+          <li>
+            <Icon name="check" size={18} />
+            <span><strong>No hourly billing</strong> for the standard service.</span>
+          </li>
+          <li>
+            <Icon name="check" size={18} />
+            <span><strong>No payment to submit a request.</strong> {offer.payment.suitability}</span>
+          </li>
+          <li>
+            <Icon name="check" size={18} />
+            <span><strong>No surprises.</strong> Any additional work is discussed and agreed in advance.</span>
+          </li>
+        </ul>
       </div>
-      <PricingCard headingLevel="h2" />
+      <PricingCard headingLevel="h2" id="pricing-page-card" />
+    </div>
+  </section>
+
+  <section class="section section--stone" aria-labelledby="scope-title">
+    <div class="container">
+      <SectionHeading eyebrow="Service Scope" title="Standard service and additional work" id="scope-title">
+        The fixed fee covers a defined scope. Some matters need more, and that work is handled under a separate
+        engagement.
+      </SectionHeading>
+      <ScopeComparison />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="payment-title">
+    <div class="container">
+      <SectionHeading eyebrow="Payment" title="When payment happens" id="payment-title">
+        You are never asked to pay just to tell us about your dispute.
+      </SectionHeading>
+      <PaymentAssurance />
+    </div>
+  </section>
+
+  <section class="section section--stone" aria-labelledby="pricing-faq-title">
+    <div class="container container--narrow">
+      <SectionHeading eyebrow="Questions" title="Pricing questions" id="pricing-faq-title" />
+      <FaqList items={pricingFaqs} />
+      <p class="pricing-faq-more"><a href="/faq/">View all questions</a></p>
     </div>
   </section>
 
@@ -37,19 +98,46 @@ import { offer } from '@/config/site';
 </BaseLayout>
 
 <style>
-  .pricing {
+  .overview {
     display: grid;
     gap: var(--space-8);
-    align-items: start;
+    align-items: center;
   }
 
   @media (min-width: 56rem) {
-    .pricing {
-      grid-template-columns: 1fr minmax(22rem, 28rem);
+    .overview {
+      grid-template-columns: 1fr minmax(20rem, 27rem);
+      gap: var(--space-9);
     }
   }
 
-  .prose h2:first-child {
-    margin-top: 0;
+  .overview__points {
+    display: grid;
+    gap: var(--space-4);
+    padding: 0;
+    list-style: none;
+  }
+
+  .overview__points li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .overview__points :global(svg) {
+    flex-shrink: 0;
+    margin-top: 0.25em;
+    color: var(--color-brass-600);
+  }
+
+  .overview__points strong {
+    color: var(--color-navy-900);
+  }
+
+  .pricing-faq-more {
+    margin-top: var(--space-6);
+    font-weight: 600;
   }
 </style>

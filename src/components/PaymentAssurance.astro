@@ -1,0 +1,99 @@
+---
+/** Three-part explanation of when review, engagement and payment happen. */
+import Icon from './Icon.astro';
+import { offer } from '@/config/site';
+
+const items = [
+  {
+    icon: 'search',
+    title: 'Suitability reviewed first',
+    text: `${offer.payment.noUpfront} ${offer.payment.suitability}`,
+  },
+  {
+    icon: 'contract',
+    title: 'Engagement agreement',
+    text: `${offer.payment.engagement} You will see the engagement terms before you commit.`,
+  },
+  {
+    icon: 'lock',
+    title: offer.payment.headline,
+    text: `Once your matter is accepted and the terms are agreed, you complete secure payment of the ${offer.priceDisplay} fee.`,
+  },
+] as const;
+---
+
+<ul class="assurance reveal" role="list">
+  {
+    items.map((item) => (
+      <li class="assurance__item">
+        <span class="assurance__icon">
+          <Icon name={item.icon} size={22} />
+        </span>
+        <div>
+          <h3>{item.title}</h3>
+          <p>{item.text}</p>
+        </div>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .assurance {
+    display: grid;
+    padding: 0;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    overflow: hidden;
+  }
+
+  @media (min-width: 52rem) {
+    .assurance {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .assurance__item {
+    display: flex;
+    gap: var(--space-4);
+    padding: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    transition: background-color var(--duration) var(--ease);
+  }
+
+  .assurance__item + .assurance__item {
+    border-top: 1px solid var(--color-line);
+  }
+
+  @media (min-width: 52rem) {
+    .assurance__item + .assurance__item {
+      border-top: 0;
+      border-left: 1px solid var(--color-line);
+    }
+  }
+
+  .assurance__item:hover {
+    background: #fdfaf3;
+  }
+
+  .assurance__icon {
+    display: inline-grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: var(--color-brass-100);
+    color: var(--color-brass-700);
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+  }
+
+  p {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+</style>
