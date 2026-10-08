@@ -218,7 +218,7 @@ export const primaryNav: NavItem[] = [
 export const legalNav: NavItem[] = [
   { label: 'Legal Disclaimer', href: '/disclaimer/' },
   { label: 'Privacy Policy', href: '/privacy/' },
-  { label: 'Terms of Service', href: '/terms/' },
+  { label: 'Terms of Use', href: '/terms/' },
 ];
 
 export const cta = {
@@ -228,10 +228,81 @@ export const cta = {
   short: { label: 'Get Started', href: '/get-started/' },
 } as const;
 
-/** Florida attorney-advertising and website disclaimers shown in the footer. */
+/**
+ * Attorney profile. Only facts confirmed by the firm belong here.
+ *
+ * Do not add credentials, education, bar admission dates, prior positions,
+ * awards, results or testimonials unless they are confirmed against
+ * https://hoffman.legal or the attorney's official Florida Bar profile.
+ * Items that still need confirmation are listed in `toVerify` and are
+ * NOT rendered anywhere on the site.
+ */
+export const attorneyProfile = {
+  name: firm.attorney,
+  role: 'Attorney',
+  firm: firm.legalName,
+  officeCity: `${firm.address.city}, Florida`,
+  firmWebsiteLabel: 'hoffman.legal',
+  toVerify: [
+    'Florida Bar admission year and bar number',
+    'Law school and graduation year',
+    'Prior positions (third-party search summaries mention public defender experience)',
+    'Practice areas listed on hoffman.legal',
+  ],
+} as const;
+
+/**
+ * Links to Hoffman Legal's existing policies on the firm's main website.
+ * Leave empty until the exact URLs are confirmed; the site then links to the
+ * firm homepage and to this site's own privacy and terms pages instead.
+ */
+export const firmPolicyLinks = {
+  privacy: '',
+  terms: '',
+} as const;
+
+/** Florida Bar public member search, for visitors who wish to verify an attorney's license. */
+export const barLookupUrl = 'https://www.floridabar.org/directories/find-mbr/';
+
+/** Attorney-advertising and website disclaimers. Shown in the footer and on the legal pages. */
 export const disclaimers = {
   advertising:
     'The hiring of a lawyer is an important decision that should not be based solely upon advertisements. Before you decide, ask us to send you free written information about our qualifications and experience.',
+  attorneyAdvertising: 'This website is an advertisement for legal services.',
   noRelationship:
-    'The information on this website is for general information purposes only and is not legal advice. Contacting Hoffman Legal does not create an attorney-client relationship. An attorney-client relationship is formed only after a conflict check and a signed engagement agreement. Past results do not guarantee a similar outcome.',
+    'The information on this website is for general information purposes only and is not legal advice. Submitting an inquiry or contacting Hoffman Legal does not create an attorney-client relationship. An attorney-client relationship is formed only after a conflict check and a signed engagement agreement.',
+  results: 'Results are not guaranteed. Past results do not guarantee a similar outcome in any other matter.',
+  jurisdiction:
+    'Hoffman Legal is a Florida law firm. This service is focused on disputes connected to Florida and is not available for every matter or in every jurisdiction.',
 } as const;
+
+/**
+ * Service safeguards, shown in the "Important information" notice.
+ * Keep consistent with `offer` and the FAQ.
+ */
+export const serviceNotices = [
+  {
+    title: 'Results are not guaranteed',
+    text: 'No attorney can guarantee how another party will respond to a demand letter or that a dispute will be resolved.',
+  },
+  {
+    title: 'Litigation is not automatically included',
+    text: 'The $500 fee covers one demand letter. Lawsuits, court proceedings, settlement negotiations and other work require a separate engagement.',
+  },
+  {
+    title: 'The engagement agreement governs the scope',
+    text: 'If your matter is accepted, the scope of the representation is defined by the written engagement agreement you sign.',
+  },
+  {
+    title: 'An inquiry does not create an attorney-client relationship',
+    text: 'Submitting a request or contacting the firm does not make Hoffman Legal your attorney. Representation begins only after acceptance, a conflict check and a signed engagement agreement.',
+  },
+  {
+    title: 'Legal deadlines still apply',
+    text: 'Sending a demand letter does not stop, pause or extend a statute of limitations or any other legal deadline. If a deadline may be approaching, tell us right away and consider seeking legal advice promptly.',
+  },
+  {
+    title: 'Florida law firm',
+    text: 'Hoffman Legal is a Florida law firm. This service is focused on disputes connected to Florida and is not available nationwide.',
+  },
+] as const;

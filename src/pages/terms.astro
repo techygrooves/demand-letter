@@ -1,12 +1,58 @@
 ---
 import LegalLayout from '@/layouts/LegalLayout.astro';
-import { firm } from '@/config/site';
+import { firm, offer, firmPolicyLinks } from '@/config/site';
 ---
 
-<LegalLayout title="Terms of Service" description="Terms governing use of the Hoffman Legal demand letter website.">
-  <!-- Placeholder. Final terms of service to be drafted and reviewed by the attorney. -->
+<LegalLayout
+  title="Terms of Use"
+  description="Terms governing use of the Hoffman Legal demand letter website."
+>
+  <!-- Draft for attorney review before launch. -->
   <p>
-    These terms will govern use of this website and the {firm.name} demand letter service. For questions in the
-    meantime, email <a href={`mailto:${firm.email}`}>{firm.email}</a>.
+    By using this website you agree to these terms.
+    {
+      firmPolicyLinks.terms ? (
+        <>
+          They supplement {firm.name}’s <a href={firmPolicyLinks.terms}>firm-wide terms</a>.
+        </>
+      ) : null
+    }
+  </p>
+
+  <h2>Information only</h2>
+  <p>
+    Content on this website is general information about {firm.name}’s demand letter service. It is not legal advice,
+    and it may not reflect the most current legal developments.
+  </p>
+
+  <h2>Inquiries and representation</h2>
+  <p>
+    Submitting a request is an inquiry only. It is not an engagement agreement and does not create an attorney-client
+    relationship. {firm.name} may decline any matter. Representation begins only after acceptance, a conflict check and a
+    signed engagement agreement, which governs the scope of the representation.
+  </p>
+
+  <h2>Fees</h2>
+  <p>
+    The {offer.priceDisplay} fee applies to one attorney-prepared demand letter in a matter accepted for this service.
+    {offer.payment.noUpfront} Work outside the standard service, including litigation, is not included and requires a
+    separate agreement.
+  </p>
+
+  <h2>No guarantee</h2>
+  <p>
+    {firm.name} does not guarantee any particular result. Sending a demand letter does not stop or extend any statute of
+    limitations or other legal deadline.
+  </p>
+
+  <h2>Jurisdiction</h2>
+  <p>
+    {firm.name} is a Florida law firm. This service is not available for every matter or in every jurisdiction. These
+    terms are governed by the laws of the State of Florida.
+  </p>
+
+  <h2>Contact</h2>
+  <p>
+    Questions about these terms can be sent to <a href={`mailto:${firm.email}`}>{firm.email}</a>.
   </p>
 </LegalLayout>

@@ -87,6 +87,7 @@ const stateOptions = usStates.map(([value, label]) => ({ value, label }));
           <IntakeField
             name="disputeState"
             label="State where the dispute arose"
+            hint="Hoffman Legal is a Florida law firm. Matters connected to other states may not be suitable for this service."
             as="select"
             required
             options={stateOptions}

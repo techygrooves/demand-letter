@@ -5,7 +5,6 @@ const WITH_ENDPOINT = 'http://localhost:4322/get-started/';
 const ENDPOINT = 'https://intake.example.test/submit';
 const MIN_FILL_MS = 4000;
 
-const form = (page: Page) => page.locator('[data-form]');
 const next = (page: Page) => page.getByRole('button', { name: 'Next' });
 const previous = (page: Page) => page.getByRole('button', { name: 'Previous' });
 const submit = (page: Page) => page.getByRole('button', { name: /Submit Request|Submitting/ });
