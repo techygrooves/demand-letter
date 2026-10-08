@@ -1,0 +1,85 @@
+---
+import Icon from '@/components/Icon.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import { disputeTypes } from '@/config/site';
+---
+
+<section class="section" aria-labelledby="disputes-title">
+  <div class="container">
+    <SectionHeading eyebrow="Disputes We Handle" title="One service for many kinds of civil disputes" id="disputes-title">
+      From an unpaid invoice to a contractor who walked off the job, a formal demand from an attorney is often the
+      most efficient first step toward resolution.
+    </SectionHeading>
+
+    <ul class="disputes" role="list">
+      {
+        disputeTypes.map((item) => (
+          <li class="dispute">
+            <span class="dispute__icon">
+              <Icon name={item.icon} size={26} />
+            </span>
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="disputes__note muted">
+      Don’t see your situation? <a href="/contact/">Contact us</a> to ask whether a demand letter is the right fit.
+    </p>
+  </div>
+</section>
+
+<style>
+  .disputes {
+    display: grid;
+    gap: 1px;
+    padding: 0;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background: var(--color-line);
+    overflow: hidden;
+  }
+
+  @media (min-width: 40rem) {
+    .disputes {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .disputes {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .dispute {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+    background: var(--color-surface);
+  }
+
+  .dispute__icon {
+    display: inline-grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: var(--space-2);
+    border-radius: 50%;
+    background: var(--color-brass-100);
+    color: var(--color-brass-700);
+  }
+
+  .dispute p {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .disputes__note {
+    margin-top: var(--space-6);
+    font-size: var(--text-sm);
+  }
+</style>

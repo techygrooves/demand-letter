@@ -1,0 +1,17 @@
+---
+import LegalLayout from '@/layouts/LegalLayout.astro';
+import { disclaimers } from '@/config/site';
+---
+
+<LegalLayout title="Legal Disclaimer" description="Legal disclaimer and attorney advertising notice for Hoffman Legal.">
+  <!-- Draft. Final text to be reviewed by the attorney before launch. -->
+  <h2>Attorney advertising</h2>
+  <p>{disclaimers.advertising}</p>
+  <h2>No legal advice or attorney-client relationship</h2>
+  <p>{disclaimers.noRelationship}</p>
+  <h2>Jurisdiction</h2>
+  <p>
+    Hoffman Legal is a Florida law firm. Information on this website is intended for matters arising under Florida law
+    unless otherwise stated.
+  </p>
+</LegalLayout>

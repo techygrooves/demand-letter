@@ -1,0 +1,12 @@
+---
+import LegalLayout from '@/layouts/LegalLayout.astro';
+import { firm } from '@/config/site';
+---
+
+<LegalLayout title="Terms of Service" description="Terms governing use of the Hoffman Legal demand letter website.">
+  <!-- Placeholder. Final terms of service to be drafted and reviewed by the attorney. -->
+  <p>
+    These terms will govern use of this website and the {firm.name} demand letter service. For questions in the
+    meantime, email <a href={`mailto:${firm.email}`}>{firm.email}</a>.
+  </p>
+</LegalLayout>

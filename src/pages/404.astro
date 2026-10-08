@@ -1,0 +1,24 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { cta } from '@/config/site';
+---
+
+<BaseLayout title="Page Not Found" description="The page you requested could not be found." noindex>
+  <section class="section">
+    <div class="container container--narrow not-found">
+      <p class="eyebrow">Error 404</p>
+      <h1>We couldn’t find that page.</h1>
+      <p class="lead">The page may have moved or no longer exists.</p>
+      <div class="btn-row">
+        <a href="/" class="btn">Return Home</a>
+        <a href={cta.primary.href} class="btn btn--outline">{cta.primary.label}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found > * + * {
+    margin-top: var(--space-5);
+  }
+</style>

@@ -1,0 +1,86 @@
+---
+import SectionHeading from '@/components/SectionHeading.astro';
+import { steps } from '@/config/site';
+
+interface Props {
+  /** Show the section heading (hide when the page hero already introduces the topic). */
+  showHeading?: boolean;
+  tone?: 'default' | 'stone';
+}
+
+const { showHeading = true, tone = 'stone' } = Astro.props;
+---
+
+<section class:list={['section', { 'section--stone': tone === 'stone' }]} aria-labelledby="process-title">
+  <div class="container">
+    {
+      showHeading ? (
+        <SectionHeading eyebrow="How It Works" title="A straightforward process, start to finish" id="process-title">
+          Getting a demand letter should be simple. Here is what to expect.
+        </SectionHeading>
+      ) : (
+        <h2 id="process-title" class="visually-hidden">
+          Process steps
+        </h2>
+      )
+    }
+
+    <ol class="steps" role="list">
+      {
+        steps.map((step, index) => (
+          <li class="step">
+            <span class="step__number" aria-hidden="true">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <h3>
+              <span class="visually-hidden">Step {index + 1}: </span>
+              {step.title}
+            </h3>
+            <p>{step.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .steps {
+    display: grid;
+    gap: var(--space-6);
+    padding: 0;
+    counter-reset: step;
+  }
+
+  @media (min-width: 40rem) {
+    .steps {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .steps {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-navy-900);
+  }
+
+  .step__number {
+    font-family: var(--font-serif);
+    font-size: var(--text-2xl);
+    line-height: 1;
+    color: var(--color-brass-600);
+  }
+
+  .step p {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+</style>

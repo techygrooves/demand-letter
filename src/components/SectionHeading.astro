@@ -1,0 +1,38 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  /** Heading level for the title; defaults to h2. */
+  as?: 'h1' | 'h2' | 'h3';
+  align?: 'start' | 'center';
+  id?: string;
+}
+
+const { eyebrow, title, as: Tag = 'h2', align = 'start', id } = Astro.props;
+---
+
+<div class:list={['section-heading', `section-heading--${align}`]}>
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <Tag id={id}>{title}</Tag>
+  {Astro.slots.has('default') && <div class="lead"><slot /></div>}
+</div>
+
+<style>
+  .section-heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    max-width: 44rem;
+    margin-bottom: var(--space-7);
+  }
+
+  .section-heading--center {
+    align-items: center;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .section-heading--center .lead {
+    margin-inline: auto;
+  }
+</style>

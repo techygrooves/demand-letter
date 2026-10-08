@@ -1,0 +1,26 @@
+---
+/** Layout for long-form legal and policy pages. */
+import BaseLayout from './BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  updated?: string;
+}
+
+const { title, description, updated } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <PageHero title={title}>
+    {updated && <p>Last updated: {updated}</p>}
+  </PageHero>
+  <section class="section">
+    <div class="container">
+      <div class="prose">
+        <slot />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

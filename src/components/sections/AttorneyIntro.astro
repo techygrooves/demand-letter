@@ -1,0 +1,73 @@
+---
+import SectionHeading from '@/components/SectionHeading.astro';
+import { firm } from '@/config/site';
+
+interface Props {
+  showLink?: boolean;
+}
+
+const { showLink = true } = Astro.props;
+---
+
+<section class="section" aria-labelledby="attorney-title">
+  <div class="container attorney">
+    <div class="attorney__portrait" aria-hidden="true">
+      <!-- Replace with an optimized headshot, e.g. <Image src={headshot} alt="David Hoffman" /> from astro:assets -->
+      <span>DH</span>
+    </div>
+    <div class="attorney__copy">
+      <SectionHeading eyebrow="Your Attorney" title={`Work directly with ${firm.attorney}`} id="attorney-title" />
+      <div class="stack">
+        <p>
+          Every demand letter is reviewed, prepared and signed by {firm.attorney}, a Florida attorney with
+          {firm.name} in {firm.address.city}. You will not be handed off to a template or a call center.
+        </p>
+        <p>
+          A demand letter on law firm letterhead tells the other party that you are prepared to protect your rights. Our
+          goal is to present your position clearly, professionally and persuasively.
+        </p>
+      </div>
+      {showLink && <a href="/about/" class="attorney__link">About {firm.name} &rarr;</a>}
+    </div>
+  </div>
+</section>
+
+<style>
+  .attorney {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+
+  @media (min-width: 56rem) {
+    .attorney {
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: var(--space-9);
+    }
+  }
+
+  .attorney__portrait {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 5;
+    max-width: 24rem;
+    width: 100%;
+    border-radius: var(--radius-md);
+    background:
+      linear-gradient(160deg, var(--color-navy-800), var(--color-navy-950));
+    color: var(--color-brass-500);
+    font-family: var(--font-serif);
+    font-size: 4rem;
+    letter-spacing: 0.08em;
+  }
+
+  .attorney__copy :global(.section-heading) {
+    margin-bottom: var(--space-5);
+  }
+
+  .attorney__link {
+    display: inline-block;
+    margin-top: var(--space-5);
+    font-weight: 600;
+  }
+</style>

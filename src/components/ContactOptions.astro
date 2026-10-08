@@ -1,0 +1,84 @@
+---
+/** Phone / email / office contact cards. Used on Contact and Get Started pages. */
+import Icon from './Icon.astro';
+import { firm } from '@/config/site';
+
+const items = [
+  { icon: 'phone', label: 'Call', value: firm.phone.display, href: firm.phone.href },
+  { icon: 'mail', label: 'Email', value: firm.email, href: `mailto:${firm.email}` },
+  {
+    icon: 'pin',
+    label: 'Office',
+    value: `${firm.address.street}, ${firm.address.city}, ${firm.address.region} ${firm.address.postalCode}`,
+  },
+] as const;
+---
+
+<ul class="contact-options" role="list">
+  {
+    items.map((item) => (
+      <li class="contact-option">
+        <span class="contact-option__icon">
+          <Icon name={item.icon} />
+        </span>
+        <span class="contact-option__label">{item.label}</span>
+        {'href' in item ? (
+          <a class="contact-option__value" href={item.href}>
+            {item.value}
+          </a>
+        ) : (
+          <span class="contact-option__value">{item.value}</span>
+        )}
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .contact-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: var(--space-5);
+    padding: 0;
+    list-style: none;
+  }
+
+  .contact-option {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-6);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+
+  .contact-option__icon {
+    margin-bottom: var(--space-2);
+    color: var(--color-brass-600);
+  }
+
+  .contact-option__label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .contact-option__value {
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    color: var(--color-navy-900);
+    overflow-wrap: anywhere;
+  }
+
+  a.contact-option__value {
+    text-decoration: none;
+  }
+
+  a.contact-option__value:hover {
+    color: var(--color-brass-700);
+    text-decoration: underline;
+  }
+</style>

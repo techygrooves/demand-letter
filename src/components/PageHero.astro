@@ -1,0 +1,42 @@
+---
+/** Compact hero used at the top of interior pages. */
+interface Props {
+  eyebrow?: string;
+  title: string;
+}
+
+const { eyebrow, title } = Astro.props;
+---
+
+<section class="page-hero" aria-labelledby="page-title">
+  <div class="container">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1 id="page-title">{title}</h1>
+    {
+      Astro.slots.has('default') && (
+        <div class="lead">
+          <slot />
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    padding-block: clamp(3.5rem, 2.5rem + 4vw, 6rem) clamp(2.5rem, 2rem + 2vw, 4rem);
+    border-bottom: 1px solid var(--color-line);
+    background:
+      radial-gradient(60rem 24rem at 100% 0%, rgb(184 149 90 / 0.09), transparent 70%),
+      var(--color-paper);
+  }
+
+  .page-hero .container > * + * {
+    margin-top: var(--space-4);
+  }
+
+  h1 {
+    max-width: 18ch;
+    font-size: var(--text-3xl);
+  }
+</style>

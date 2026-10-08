@@ -1,0 +1,12 @@
+---
+import LegalLayout from '@/layouts/LegalLayout.astro';
+import { firm } from '@/config/site';
+---
+
+<LegalLayout title="Privacy Policy" description="How Hoffman Legal collects, uses and protects information submitted through this website.">
+  <!-- Placeholder. Final privacy policy to be drafted once the intake form and any analytics are defined. -->
+  <p>
+    This privacy policy will describe how {firm.name} collects, uses and protects information you provide through this
+    website. For questions in the meantime, email <a href={`mailto:${firm.email}`}>{firm.email}</a>.
+  </p>
+</LegalLayout>

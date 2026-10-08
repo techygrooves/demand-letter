@@ -1,0 +1,274 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { firm, primaryNav, cta } from '@/config/site';
+
+const currentPath = Astro.url.pathname;
+const isCurrent = (href: string) => currentPath === href || currentPath.startsWith(href);
+---
+
+<header class="site-header" data-header>
+  <div class="container site-header__inner">
+    <Logo />
+
+    <button
+      class="site-header__toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="site-nav"
+      data-nav-toggle
+    >
+      <span class="site-header__toggle-open"><Icon name="menu" /></span>
+      <span class="site-header__toggle-close"><Icon name="close" /></span>
+      <span class="visually-hidden">Menu</span>
+    </button>
+
+    <nav id="site-nav" class="site-nav" aria-label="Primary" data-nav>
+      <ul class="site-nav__list" role="list">
+        {
+          primaryNav.map((item) => (
+            <li>
+              <a href={item.href} class="site-nav__link" aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="site-nav__actions">
+        <a href={firm.phone.href} class="site-nav__phone">
+          <Icon name="phone" size={18} />
+          <span>{firm.phone.display}</span>
+        </a>
+        <a href={cta.primary.href} class="btn">{cta.primary.label}</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+  const nav = document.querySelector<HTMLElement>('[data-nav]');
+
+  if (header && toggle && nav) {
+    const desktop = window.matchMedia('(min-width: 64rem)');
+
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      header.classList.toggle('is-open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && header.classList.contains('is-open')) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    desktop.addEventListener('change', (event) => {
+      if (event.matches) setOpen(false);
+    });
+
+    const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgb(251 249 245 / 0.92);
+    backdrop-filter: saturate(1.4) blur(10px);
+    -webkit-backdrop-filter: saturate(1.4) blur(10px);
+    border-bottom: 1px solid transparent;
+    transition:
+      border-color var(--duration) var(--ease),
+      box-shadow var(--duration) var(--ease);
+  }
+
+  .site-header.is-scrolled,
+  .site-header.is-open {
+    border-bottom-color: var(--color-line);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* backdrop-filter would make the header the containing block for the fixed mobile panel. */
+  .site-header.is-open {
+    background: var(--color-paper);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    min-height: var(--header-height);
+  }
+
+  /* Mobile toggle */
+  .site-header__toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-right: -0.5rem;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--color-navy-900);
+  }
+
+  .site-header__toggle-close,
+  .is-open .site-header__toggle-open {
+    display: none;
+  }
+
+  .is-open .site-header__toggle-close {
+    display: block;
+  }
+
+  /* Mobile navigation panel */
+  .site-nav {
+    display: none;
+  }
+
+  .is-open .site-nav {
+    position: fixed;
+    inset: var(--header-height) 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: var(--space-5) var(--gutter) var(--space-7);
+    background: var(--color-paper);
+    overflow-y: auto;
+  }
+
+  .site-nav__list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .site-nav__link {
+    display: block;
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--color-line);
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    color: var(--color-navy-900);
+    text-decoration: none;
+  }
+
+  .site-nav__link[aria-current='page'] {
+    color: var(--color-brass-700);
+  }
+
+  .site-nav__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .site-nav__phone {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 600;
+    color: var(--color-navy-900);
+    text-decoration: none;
+  }
+
+  /* Desktop */
+  @media (min-width: 64rem) {
+    .site-header__toggle {
+      display: none;
+    }
+
+    .site-nav,
+    .is-open .site-nav {
+      position: static;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-6);
+      padding: 0;
+      background: none;
+      overflow: visible;
+    }
+
+    .site-nav__list {
+      display: flex;
+      gap: var(--space-5);
+    }
+
+    .site-nav__link {
+      position: relative;
+      padding: var(--space-2) 0;
+      border: 0;
+      font-family: var(--font-sans);
+      font-size: var(--text-sm);
+      font-weight: 500;
+    }
+
+    .site-nav__link::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background: var(--color-brass-600);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--duration) var(--ease);
+    }
+
+    .site-nav__link:hover::after,
+    .site-nav__link[aria-current='page']::after {
+      transform: scaleX(1);
+    }
+
+    .site-nav__link[aria-current='page'] {
+      color: var(--color-navy-900);
+    }
+
+    .site-nav__actions {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-5);
+    }
+
+    .site-nav__phone {
+      font-size: var(--text-sm);
+    }
+  }
+
+  /* Without JavaScript, show the navigation inline below the logo on small screens. */
+  @media (max-width: 63.999rem) {
+    :global(html:not(.js)) .site-header__toggle {
+      display: none;
+    }
+
+    :global(html:not(.js)) .site-header__inner {
+      flex-wrap: wrap;
+    }
+
+    :global(html:not(.js)) .site-nav {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      width: 100%;
+      padding-bottom: var(--space-4);
+    }
+  }
+</style>
