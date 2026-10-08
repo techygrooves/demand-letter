@@ -25,7 +25,7 @@ const highlights = offer.highlights.slice(1);
         <a href="#contact" class="btn btn--outline btn--lg">{cta.secondary.label}</a>
       </div>
       <p class="hero__call">
-        Prefer to talk first? Call <a href={firm.phone.href}>{firm.phone.display}</a>
+        {offer.payment.noUpfront} Prefer to talk first? Call <a href={firm.phone.href}>{firm.phone.display}</a>
       </p>
     </div>
 
@@ -53,7 +53,7 @@ const highlights = offer.highlights.slice(1);
             ))
           }
         </ul>
-        <p class="offer__note">Subject to attorney review and a conflict check.</p>
+        <p class="offer__note">{offer.payment.suitability}</p>
       </div>
 
       <div class="offer__sign" aria-hidden="true">

@@ -1,0 +1,181 @@
+---
+/**
+ * Side-by-side comparison of the standard $500 service and work that may
+ * require a separate engagement.
+ */
+import Icon from './Icon.astro';
+import { offer } from '@/config/site';
+
+interface Props {
+  /** Heading level for the two column titles. */
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { headingLevel: Heading = 'h3' } = Astro.props;
+---
+
+<div class="scope" id="scope">
+  <div class="scope__col scope__col--included">
+    <p class="scope__tag">Included</p>
+    <Heading class="scope__title">The standard {offer.priceDisplay} service</Heading>
+    <ul class="scope__list" role="list">
+      {
+        offer.scopeDetail.map((item) => (
+          <li>
+            <span class="scope__icon scope__icon--yes">
+              <Icon name="check" size={16} />
+            </span>
+            <div>
+              <strong>{item.title}</strong>
+              <p>{item.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="scope__col scope__col--separate">
+    <p class="scope__tag">Separate engagement</p>
+    <Heading class="scope__title">Additional work, quoted separately</Heading>
+    <ul class="scope__list" role="list">
+      {
+        offer.additionalWork.map((item) => (
+          <li>
+            <span class="scope__icon scope__icon--no">
+              <Icon name="dash" size={16} />
+            </span>
+            <div>
+              <strong>{item.title}</strong>
+              <p>{item.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="scope__note">
+      <Icon name="info" size={18} />
+      <span>{offer.additionalWorkNote}</span>
+    </p>
+  </div>
+</div>
+
+<style>
+  .scope {
+    display: grid;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-surface);
+  }
+
+  @media (min-width: 52rem) {
+    .scope {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .scope__col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: clamp(1.75rem, 1.2rem + 2vw, 3rem);
+  }
+
+  .scope__col--separate {
+    background: var(--color-stone);
+    border-top: 1px solid var(--color-line);
+  }
+
+  @media (min-width: 52rem) {
+    .scope__col--separate {
+      border-top: 0;
+      border-left: 1px solid var(--color-line);
+    }
+  }
+
+  .scope__tag {
+    align-self: flex-start;
+    padding: 0.3rem 0.75rem;
+    border-radius: 99px;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .scope__col--included .scope__tag {
+    background: var(--color-navy-900);
+    color: var(--color-brass-500);
+  }
+
+  .scope__col--separate .scope__tag {
+    border: 1px solid var(--color-line-strong);
+    color: var(--color-text-muted);
+  }
+
+  .scope__title {
+    font-size: var(--text-xl);
+  }
+
+  .scope__list {
+    display: grid;
+    gap: var(--space-4);
+    margin-top: var(--space-2);
+    padding: 0;
+    list-style: none;
+  }
+
+  .scope__list li {
+    display: flex;
+    gap: var(--space-3);
+  }
+
+  .scope__list strong {
+    display: block;
+    color: var(--color-navy-900);
+    font-weight: 600;
+  }
+
+  .scope__list p {
+    margin-top: var(--space-1);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .scope__icon {
+    display: inline-grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-top: 0.1em;
+    border-radius: 50%;
+  }
+
+  .scope__icon--yes {
+    background: var(--color-navy-900);
+    color: var(--color-brass-500);
+  }
+
+  .scope__icon--no {
+    border: 1px solid var(--color-line-strong);
+    color: var(--color-text-muted);
+  }
+
+  .scope__note {
+    display: flex;
+    gap: var(--space-3);
+    margin-top: auto;
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-line-strong);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .scope__note :global(svg) {
+    flex-shrink: 0;
+    margin-top: 0.15em;
+    color: var(--color-brass-700);
+  }
+</style>

@@ -2,23 +2,96 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHero from '@/components/PageHero.astro';
 import ProcessSteps from '@/components/sections/ProcessSteps.astro';
-import DisputeTypes from '@/components/sections/DisputeTypes.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import PaymentAssurance from '@/components/PaymentAssurance.astro';
+import PricingCard from '@/components/PricingCard.astro';
+import FaqList from '@/components/FaqList.astro';
 import CtaBand from '@/components/CtaBand.astro';
+import Icon from '@/components/Icon.astro';
+import { offer } from '@/config/site';
+import { faqs } from '@/data/faq';
+
+const processFaqs = faqs.filter((item) => item.process);
 ---
 
 <BaseLayout
   title="How It Works"
-  description="How Hoffman Legal prepares attorney-signed demand letters: share your facts, attorney review, drafting and delivery, all for a $500 flat fee."
+  description={`How Hoffman Legal's ${offer.priceDisplay} demand letter service works: tell us about your dispute, attorney review, engagement and secure payment after acceptance, then preparation of your individualized demand letter.`}
 >
-  <PageHero eyebrow="How It Works" title="From your dispute to a signed attorney demand letter">
-    A clear, four-step process designed to move quickly and keep you informed.
+  <PageHero eyebrow="How It Works" title="From your request to an attorney-prepared demand letter">
+    Four clear steps. Your matter is reviewed for suitability before any payment is requested, and you will know what
+    is included before you commit.
   </PageHero>
 
-  <ProcessSteps showHeading={false} tone="default" />
+  <ProcessSteps showHeading={false} tone="default" detailed showCta={false} />
 
-  <!-- TODO: Add detail on what information and documents clients should prepare. -->
+  <section class="section section--stone" aria-labelledby="payment-title">
+    <div class="container">
+      <SectionHeading eyebrow="Before You Pay" title="Review first. Payment only after acceptance." id="payment-title">
+        Submitting a request does not commit you to anything. Here is when the engagement and payment happen.
+      </SectionHeading>
+      <PaymentAssurance />
+    </div>
+  </section>
 
-  <DisputeTypes />
+  <section class="section" aria-labelledby="hiw-pricing-title">
+    <div class="container hiw-pricing">
+      <div class="hiw-pricing__copy">
+        <SectionHeading eyebrow="Transparent Pricing" title={`One fixed fee: ${offer.priceDisplay}`} id="hiw-pricing-title">
+          The standard service covers one attorney-prepared demand letter. Litigation, settlement negotiations,
+          additional letters and extensive investigation may require a separate engagement.
+        </SectionHeading>
+        <a href="/pricing/" class="hiw-pricing__link">
+          See full pricing and scope <Icon name="arrow" size={16} />
+        </a>
+      </div>
+      <PricingCard id="hiw-pricing-card" />
+    </div>
+  </section>
+
+  <section class="section section--stone" aria-labelledby="hiw-faq-title">
+    <div class="container container--narrow">
+      <SectionHeading eyebrow="Questions" title="Process questions" id="hiw-faq-title" />
+      <FaqList items={processFaqs} />
+      <p class="hiw-faq-more"><a href="/faq/">View all questions</a></p>
+    </div>
+  </section>
 
   <CtaBand />
 </BaseLayout>
+
+<style>
+  .hiw-pricing {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+
+  @media (min-width: 56rem) {
+    .hiw-pricing {
+      grid-template-columns: 1fr minmax(20rem, 26rem);
+      gap: var(--space-9);
+    }
+  }
+
+  .hiw-pricing__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .hiw-pricing__link :global(svg) {
+    transition: transform var(--duration) var(--ease);
+  }
+
+  .hiw-pricing__link:hover :global(svg) {
+    transform: translateX(3px);
+  }
+
+  .hiw-faq-more {
+    margin-top: var(--space-6);
+    font-weight: 600;
+  }
+</style>

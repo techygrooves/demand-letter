@@ -11,8 +11,8 @@ interface Props {
 }
 
 const {
-  title = 'Take a professional first step toward resolution.',
-  text = `Put your position in writing with an attorney-prepared demand letter on Hoffman Legal letterhead, for one flat fee of ${offer.priceDisplay}.`,
+  title = 'Start Your Demand Letter Request',
+  text = `Tell us about your dispute. The attorney will review whether your matter is suitable for the ${offer.priceDisplay} fixed-fee service before any payment is requested.`,
   secondaryHref = cta.secondary.href,
 } = Astro.props;
 ---
@@ -26,14 +26,24 @@ const {
     </div>
     <div class="cta-band__actions">
       <div class="btn-row">
-        <a href={cta.primary.href} class="btn btn--accent btn--lg">
-          {cta.primary.label}
+        <a href={cta.request.href} class="btn btn--accent btn--lg">
+          {cta.request.label}
           <Icon name="arrow" size={18} />
         </a>
         <a href={secondaryHref} class="btn btn--outline btn--lg">{cta.secondary.label}</a>
       </div>
+      <ul class="cta-band__assurances" role="list">
+        <li>
+          <Icon name="check" size={16} />
+          {offer.payment.noUpfront}
+        </li>
+        <li>
+          <Icon name="lock" size={16} />
+          {offer.payment.headline}
+        </li>
+      </ul>
       <p class="cta-band__phone">
-        Or call <a href={firm.phone.href}>{firm.phone.display}</a>
+        Prefer to talk first? Call <a href={firm.phone.href}>{firm.phone.display}</a>
       </p>
     </div>
   </div>
@@ -74,11 +84,36 @@ const {
   }
 
   h2 {
-    max-width: 20ch;
+    max-width: 16ch;
+  }
+
+  .cta-band__actions .btn {
+    white-space: normal;
+  }
+
+  .cta-band__assurances {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+    margin-top: var(--space-5);
+    padding: 0;
+    list-style: none;
+    font-size: var(--text-sm);
+    color: var(--color-text-inverse);
+  }
+
+  .cta-band__assurances li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .cta-band__assurances :global(svg) {
+    color: var(--color-brass-500);
   }
 
   .cta-band__phone {
-    margin-top: var(--space-4);
+    margin-top: var(--space-3);
     font-size: var(--text-sm);
     color: var(--color-text-inverse-muted);
   }
