@@ -2,6 +2,7 @@
  * Single source of truth for firm details, navigation and offer content.
  * Edit values here; components and pages read from this file.
  */
+import { url } from '@/lib/url';
 
 export const firm = {
   name: 'Hoffman Legal',
@@ -31,7 +32,7 @@ export const site = {
     'Attorney-prepared demand letters for a $500 flat fee. Hoffman Legal prepares individualized demand letters on firm letterhead for unpaid debts, contract breaches, deposits, property damage and other Florida civil disputes.',
   locale: 'en_US',
   /** Image path (from /public) for social sharing previews. */
-  ogImage: '/og-image.png',
+  ogImage: url('/og-image.png'),
 } as const;
 
 /**
@@ -207,25 +208,25 @@ export interface NavItem {
 }
 
 export const primaryNav: NavItem[] = [
-  { label: 'How It Works', href: '/how-it-works/' },
-  { label: 'Disputes', href: '/disputes/' },
-  { label: 'Pricing', href: '/pricing/' },
-  { label: 'About', href: '/about/' },
-  { label: 'FAQ', href: '/faq/' },
-  { label: 'Contact', href: '/contact/' },
+  { label: 'How It Works', href: url('/how-it-works/') },
+  { label: 'Disputes', href: url('/disputes/') },
+  { label: 'Pricing', href: url('/pricing/') },
+  { label: 'About', href: url('/about/') },
+  { label: 'FAQ', href: url('/faq/') },
+  { label: 'Contact', href: url('/contact/') },
 ];
 
 export const legalNav: NavItem[] = [
-  { label: 'Legal Disclaimer', href: '/disclaimer/' },
-  { label: 'Privacy Policy', href: '/privacy/' },
-  { label: 'Terms of Use', href: '/terms/' },
+  { label: 'Legal Disclaimer', href: url('/disclaimer/') },
+  { label: 'Privacy Policy', href: url('/privacy/') },
+  { label: 'Terms of Use', href: url('/terms/') },
 ];
 
 export const cta = {
-  primary: { label: 'Get Started — $500', href: '/get-started/' },
-  request: { label: 'Start Your Demand Letter Request', href: '/get-started/' },
-  secondary: { label: 'Discuss Your Situation', href: '/contact/' },
-  short: { label: 'Get Started', href: '/get-started/' },
+  primary: { label: 'Get Started — $500', href: url('/get-started/') },
+  request: { label: 'Start Your Demand Letter Request', href: url('/get-started/') },
+  secondary: { label: 'Discuss Your Situation', href: url('/contact/') },
+  short: { label: 'Get Started', href: url('/get-started/') },
 } as const;
 
 /**

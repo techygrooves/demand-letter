@@ -1,6 +1,7 @@
 ---
 import LegalLayout from '@/layouts/LegalLayout.astro';
 import { disclaimers, firm, offer, barLookupUrl, firmPolicyLinks } from '@/config/site';
+import { url } from '@/lib/url';
 ---
 
 <LegalLayout
@@ -56,7 +57,7 @@ import { disclaimers, firm, offer, barLookupUrl, firmPolicyLinks } from '@/confi
 
   <h2>Related policies</h2>
   <p>
-    See this website’s <a href="/privacy/">Privacy Policy</a> and <a href="/terms/">Terms of Use</a>.
+    See this website’s <a href={url('/privacy/')}>Privacy Policy</a> and <a href={url('/terms/')}>Terms of Use</a>.
     {
       firmPolicyLinks.privacy || firmPolicyLinks.terms ? (
         <>

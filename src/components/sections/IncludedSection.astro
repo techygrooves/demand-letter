@@ -3,6 +3,7 @@ import SectionHeading from '@/components/SectionHeading.astro';
 import PricingCard from '@/components/PricingCard.astro';
 import Icon from '@/components/Icon.astro';
 import { offer } from '@/config/site';
+import { url } from '@/lib/url';
 ---
 
 <section class="section" id="included" aria-labelledby="included-title">
@@ -36,7 +37,7 @@ import { offer } from '@/config/site';
               {offer.additionalWork.map((item) => <li>{item.title}</li>)}
             </ul>
           </div>
-          <a href="/pricing/#scope" class="separate__link">
+          <a href={url('/pricing/#scope')} class="separate__link">
             See full scope and pricing <Icon name="arrow" size={16} />
           </a>
         </div>

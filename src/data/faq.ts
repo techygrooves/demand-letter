@@ -7,6 +7,7 @@
  * Tags choose where an item appears in addition to /faq/:
  *   featured → home page, pricing → /pricing/, process → /how-it-works/
  */
+import { url } from '@/lib/url';
 
 export interface FaqLink {
   label: string;
@@ -46,7 +47,7 @@ export const faqs: FaqItem[] = [
       'The fee is a flat $500 for one attorney-prepared demand letter in a matter that has been reviewed and accepted for this service. There is no hourly billing for the standard service.',
       'There is no charge to submit a request. Payment is requested only after your matter has been reviewed, accepted and you have received the engagement terms. Any work outside the standard service is quoted separately and only undertaken by agreement.',
     ],
-    links: [{ label: 'See pricing details', href: '/pricing/' }],
+    links: [{ label: 'See pricing details', href: url('/pricing/') }],
   },
   {
     id: 'whats-included',
@@ -63,7 +64,7 @@ export const faqs: FaqItem[] = [
       'Preparation on professional Hoffman Legal letterhead',
       'A clear statement of your requested resolution',
     ],
-    links: [{ label: 'Compare the standard service and additional work', href: '/pricing/#scope' }],
+    links: [{ label: 'Compare the standard service and additional work', href: url('/pricing/#scope') }],
   },
   {
     id: 'avoid-a-lawsuit',
@@ -82,7 +83,7 @@ export const faqs: FaqItem[] = [
       'Hoffman Legal considers demand letters for a range of civil disputes, for example unpaid debts, breach of contract, landlord-tenant and property disputes, consumer complaints, business and contractor disputes, and certain employment-related and insurance or reimbursement matters.',
       'These are examples only. Every matter is subject to attorney assessment, and criminal defense, contested litigation and specialized claims are not included in the $500 fee.',
     ],
-    links: [{ label: 'View types of disputes', href: '/disputes/' }],
+    links: [{ label: 'View types of disputes', href: url('/disputes/') }],
   },
   {
     id: 'ignored-letter',
@@ -122,7 +123,7 @@ export const faqs: FaqItem[] = [
       'The amount in dispute, if any, and the resolution you are seeking',
       'Any upcoming deadline or court date',
     ],
-    links: [{ label: 'Start your request', href: '/get-started/' }],
+    links: [{ label: 'Start your request', href: url('/get-started/') }],
   },
   {
     id: 'how-long',

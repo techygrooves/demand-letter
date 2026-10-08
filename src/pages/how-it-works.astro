@@ -10,6 +10,7 @@ import CtaBand from '@/components/CtaBand.astro';
 import Icon from '@/components/Icon.astro';
 import { offer } from '@/config/site';
 import { faqs } from '@/data/faq';
+import { url } from '@/lib/url';
 
 const processFaqs = faqs.filter((item) => item.process);
 ---
@@ -41,7 +42,7 @@ const processFaqs = faqs.filter((item) => item.process);
           The standard service covers one attorney-prepared demand letter. Litigation, settlement negotiations,
           additional letters and extensive investigation may require a separate engagement.
         </SectionHeading>
-        <a href="/pricing/" class="hiw-pricing__link">
+        <a href={url('/pricing/')} class="hiw-pricing__link">
           See full pricing and scope <Icon name="arrow" size={16} />
         </a>
       </div>
@@ -53,7 +54,7 @@ const processFaqs = faqs.filter((item) => item.process);
     <div class="container container--narrow">
       <SectionHeading eyebrow="Questions" title="Process questions" id="hiw-faq-title" />
       <FaqList items={processFaqs} />
-      <p class="hiw-faq-more"><a href="/faq/">View all questions</a></p>
+      <p class="hiw-faq-more"><a href={url('/faq/')}>View all questions</a></p>
     </div>
   </section>
 
