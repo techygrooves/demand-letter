@@ -57,6 +57,25 @@ export interface Matter {
   attorney?: string;
   /** Free-text note appended above the signature, used by any stage. */
   note?: string;
+
+  /* --- Fields used only when opening the case in the CRM --- */
+
+  /** The client's postal address, for the CRM record. */
+  clientAddress?: string;
+  /** Link to Clients/<Client Name>/Demand Letters/ in the firm's Drive. */
+  driveUrl?: string;
+  /** Date the letter was issued, YYYY-MM-DD. The CRM dates the fee by this. */
+  letterSentDate?: string;
+  /** Date the case was opened, YYYY-MM-DD. Defaults to today. */
+  dateOpened?: string;
+  /** Date the case was closed, YYYY-MM-DD. Required when `crmStatus` is Closed. */
+  dateClosed?: string;
+  /** Fee actually taken in, e.g. "500". Left out until the money has arrived. */
+  feePaid?: string;
+  /** CRM case status: Active (the default) or Closed. */
+  crmStatus?: string;
+  /** Where the enquiry came from, e.g. "floridademandletter.com". */
+  leadSource?: string;
 }
 
 export class MatterError extends Error {}
@@ -68,6 +87,8 @@ const STRING_FIELDS = [
   'reference', 'clientName', 'clientEmail', 'salutation', 'disputeType', 'opposingParty',
   'disputeState', 'amount', 'resolution', 'clientPhone', 'declineReason', 'declineNote',
   'paymentLink', 'deliveryMethod', 'responseDeadline', 'responseSummary', 'attorney', 'note',
+  'clientAddress', 'driveUrl', 'letterSentDate', 'dateOpened', 'dateClosed', 'feePaid',
+  'crmStatus', 'leadSource',
 ] as const;
 
 const LIST_FIELDS = ['questions', 'nextSteps', 'reviewPoints'] as const;

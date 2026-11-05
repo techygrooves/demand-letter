@@ -13,6 +13,7 @@ Built with [Astro](https://astro.build) as a fully static site: no server runtim
 | `npm run build`   | Type-check and build the static site to `dist/` |
 | `npm run preview` | Preview the production build locally            |
 | `npm run draft`   | Draft a client email for a matter — see [docs/CLIENT-EMAILS.md](docs/CLIENT-EMAILS.md) |
+| `npm run crm`     | Build a CRM import file opening a demand letter case — see [docs/CRM-CASES.md](docs/CRM-CASES.md) |
 | `npm test`        | Unit tests (Vitest): intake validation and submission |
 | `npm run test:e2e`| Browser tests (Playwright): full intake flow, desktop and mobile, plus an axe accessibility scan |
 
@@ -84,6 +85,8 @@ opens with a checklist to confirm before sending.
 | `src/lib/comms/matter.ts` | The matter record, validated and normalised |
 | `src/lib/comms/render.ts` | Plain-text rendering, signature and disclaimer |
 | `tools/draft-email.ts` | The command-line tool |
+| `src/lib/crm/demand-case.ts` | Builds a CRM import file opening a demand letter case |
+| `tools/crm-case.ts` | The CRM command-line tool |
 | `matters/`, `drafts/` | Git-ignored. **Client data never goes in this repository** |
 
 Firm details, the price and the scope wording come from `src/config/site.ts`, so
@@ -92,6 +95,19 @@ the emails and the website cannot drift apart. Tests in
 predicted outcomes, no payment request before acceptance.
 
 Full guide: [docs/CLIENT-EMAILS.md](docs/CLIENT-EMAILS.md).
+
+## Opening cases in the CRM
+
+`npm run crm` builds a file that opens a demand letter case in Hoffman Legal
+Case Management, carrying the fee taken in and the client's Google Drive folder.
+The CRM keeps its data in the browser and has no API, so the way in is its own
+backup format: generate the file, then use **Merge (add only)** in the CRM
+header, which is add-only and cannot change or delete existing records.
+
+A demand letter's revenue is read from `amountPaid` on the matter, dated by
+`dateSent` — not from the `payments` collection, which belongs to the criminal
+and PI matters. Full guide, including what the tool refuses to write:
+[docs/CRM-CASES.md](docs/CRM-CASES.md).
 
 ## Deploying to GitHub Pages
 
