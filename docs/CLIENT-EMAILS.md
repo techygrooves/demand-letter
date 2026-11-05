@@ -49,6 +49,36 @@ facts of their dispute, so:
 `matters/EXAMPLE.matter.json` is the one committed matter file. It is invented
 data for testing and shows every field.
 
+## Filing to Google Drive
+
+Letters and correspondence for a matter are filed in the firm's Google Drive
+under the client's name:
+
+```
+My Drive/
+  Clients/
+    <Client Name>/
+      Demand Letters/
+        2026-11-05 Demand Letter - Acme Roofing LLC.pdf
+        2026-11-05 Letter sent - client email.txt
+```
+
+`Clients/` is at the root of My Drive
+([folder](https://drive.google.com/drive/folders/1b3CXW6FNpckCJOURBrR3zX0s0-E3zHad)).
+`<Client Name>` is `clientName` from the matter file, spelled exactly as it is
+there, so one client has one folder however many matters they bring. A folder
+ID is not a credential — Drive still enforces permissions — so it is recorded
+here to keep the destination unambiguous.
+
+Naming: `YYYY-MM-DD <what it is>`, date first so the folder sorts
+chronologically. The issued demand letter keeps the date it went out, not the
+date it was filed.
+
+This tool does not upload anything itself and holds no Google credentials. It
+writes the file locally; filing it is a separate step through the firm's Drive
+account. Keeping the two apart is deliberate: a tool that cannot reach Drive
+cannot put a draft in a client's folder by accident.
+
 ## The matter file
 
 One JSON object. Five fields are always required:
