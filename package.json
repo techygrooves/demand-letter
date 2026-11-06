@@ -9,6 +9,8 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "draft": "node --import ./tools/ts-resolve.mjs tools/draft-email.ts",
+    "crm": "node --import ./tools/ts-resolve.mjs tools/crm-case.ts",
     "test": "vitest run",
     "test:e2e": "playwright test"
   },

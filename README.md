@@ -12,6 +12,8 @@ Built with [Astro](https://astro.build) as a fully static site: no server runtim
 | `npm run dev`     | Start the dev server at `localhost:4321`        |
 | `npm run build`   | Type-check and build the static site to `dist/` |
 | `npm run preview` | Preview the production build locally            |
+| `npm run draft`   | Draft a client email for a matter — see [docs/CLIENT-EMAILS.md](docs/CLIENT-EMAILS.md) |
+| `npm run crm`     | Build a CRM import file opening a demand letter case — see [docs/CRM-CASES.md](docs/CRM-CASES.md) |
 | `npm test`        | Unit tests (Vitest): intake validation and submission |
 | `npm run test:e2e`| Browser tests (Playwright): full intake flow, desktop and mobile, plus an axe accessibility scan |
 
@@ -69,6 +71,43 @@ PUBLIC_INTAKE_ENDPOINT=https://…   # a form service (e.g. Formspree, Basin) or
 The endpoint receives JSON (`data`, `summary`, `submittedAt`, `source`, `spam`). Only a 2xx response is shown to
 the visitor as "received". The client-side spam checks (hidden honeypot field, minimum fill time) should be
 repeated by the backend. See `.env.example`.
+
+## Client email drafts
+
+`npm run draft` writes a draft client email for one stage of a matter — inquiry
+acknowledged, information requested, declined, accepted, letter sent, and so on.
+It writes a file; it sends nothing and is not connected to a mailbox. Each draft
+opens with a checklist to confirm before sending.
+
+| File | Purpose |
+| --- | --- |
+| `src/lib/comms/stages.ts` | The ten email templates, one function per stage |
+| `src/lib/comms/matter.ts` | The matter record, validated and normalised |
+| `src/lib/comms/render.ts` | Plain-text rendering, signature and disclaimer |
+| `tools/draft-email.ts` | The command-line tool |
+| `src/lib/crm/demand-case.ts` | Builds a CRM import file opening a demand letter case |
+| `tools/crm-case.ts` | The CRM command-line tool |
+| `matters/`, `drafts/` | Git-ignored. **Client data never goes in this repository** |
+
+Firm details, the price and the scope wording come from `src/config/site.ts`, so
+the emails and the website cannot drift apart. Tests in
+`tests/unit/comms.test.ts` enforce the limits: no turnaround promises, no
+predicted outcomes, no payment request before acceptance.
+
+Full guide: [docs/CLIENT-EMAILS.md](docs/CLIENT-EMAILS.md).
+
+## Opening cases in the CRM
+
+`npm run crm` builds a file that opens a demand letter case in Hoffman Legal
+Case Management, carrying the fee taken in and the client's Google Drive folder.
+The CRM keeps its data in the browser and has no API, so the way in is its own
+backup format: generate the file, then use **Merge (add only)** in the CRM
+header, which is add-only and cannot change or delete existing records.
+
+A demand letter's revenue is read from `amountPaid` on the matter, dated by
+`dateSent` — not from the `payments` collection, which belongs to the criminal
+and PI matters. Full guide, including what the tool refuses to write:
+[docs/CRM-CASES.md](docs/CRM-CASES.md).
 
 ## Deploying to GitHub Pages
 

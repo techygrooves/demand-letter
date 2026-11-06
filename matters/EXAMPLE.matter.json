@@ -1,0 +1,36 @@
+{
+  "reference": "2026-014",
+  "clientName": "Jane Client",
+  "clientEmail": "jane@example.com",
+  "disputeType": "contractor-construction",
+  "opposingParty": "Acme Roofing LLC",
+  "disputeState": "FL",
+  "amount": "2,500",
+  "resolution": "Return of the $2,500 deposit.",
+  "clientPhone": "(954) 555-0123",
+  "questions": [
+    "Do you have the written estimate or contract Acme gave you before you paid?",
+    "How did you pay the deposit, and do you have the receipt or bank record?",
+    "What is the last date anyone from Acme was in contact with you?"
+  ],
+  "declineReason": "needs-litigation",
+  "declineNote": "From what you have described, the other party has already instructed an attorney and taken a formal position, so a first demand letter is unlikely to be the step that moves this.",
+  "paymentLink": "https://example.invalid/pay/2026-014",
+  "reviewPoints": [
+    "The date you say the deposit was paid — the letter has 14 March 2026."
+  ],
+  "deliveryMethod": "certified mail, return receipt requested, and email",
+  "responseDeadline": "19 November 2026",
+  "responseSummary": "their attorney disputes that any deposit was paid and asks for proof of payment before discussing anything further",
+  "nextSteps": [
+    "Send them the bank record of the deposit and ask them to respond on the substance.",
+    "Pursue the claim in county court, where the amount puts it within the small claims limit."
+  ],
+  "clientAddress": "412 SE 9th Avenue, Dania Beach, FL 33004",
+  "driveUrl": "https://drive.google.com/drive/folders/EXAMPLE_FOLDER_ID",
+  "letterSentDate": "2026-11-05",
+  "dateOpened": "2026-10-28",
+  "feePaid": "500",
+  "crmStatus": "Active",
+  "leadSource": "floridademandletter.com"
+}

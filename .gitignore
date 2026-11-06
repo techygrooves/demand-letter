@@ -22,3 +22,10 @@ npm-debug.log*
 # test output
 test-results/
 playwright-report/
+
+# client email generator — never commit client data or generated drafts.
+# Note the "matters/*" form: git cannot re-include a file inside an excluded
+# directory, so "matters/" would also hide the example below.
+matters/*
+!matters/EXAMPLE.matter.json
+drafts/
