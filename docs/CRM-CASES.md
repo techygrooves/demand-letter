@@ -46,16 +46,27 @@ one matter and every other collection empty:
 `prosecutor`, `emergency` and `billing` are written blank, exactly as the CRM's
 own "New demand letter" form writes them.
 
-## Firm rule: paid in full first
+## Firm rule: demand letters are paid in full first
 
-**A demand letter case is not opened in the CRM until the fee is paid in
+**A demand letter case is not opened in the CRM until the $500 fee is paid in
 full.** The tool enforces this: without a fee it refuses to build the file and
 says so. `--allow-unpaid` overrides it deliberately, for the rare case where a
 record is needed before the money lands.
 
-The reason is that `amountPaid` is what the Demand Letters screen counts. A
-case opened early shows as an open letter with no fee against it, which reads
-as unpaid work rather than work not yet started.
+**This applies to demand letters only.** Criminal and personal injury matters
+take retainers, partial payments and payment plans, and nothing here changes
+that. Those matters are billed through the CRM's own `billing.flatFee`,
+`billing.retainer` and `billing.plan` fields and its `payments` collection,
+with the Payment Plans and Invoices screens on top — machinery this tool never
+writes to and never should. It builds `caseType: "Demand Letter"` records and
+nothing else.
+
+The reason the rule fits demand letters specifically: it is a single $500 flat
+fee for one piece of work, and `amountPaid` is what the Demand Letters screen
+counts. A case opened early shows as an open letter with no fee against it,
+which reads as unpaid work rather than work not yet started. A criminal matter
+mid-payment-plan is a different thing entirely, and the CRM models it
+properly.
 
 ## Where the money goes, and why it matters
 

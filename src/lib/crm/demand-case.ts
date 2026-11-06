@@ -155,9 +155,13 @@ export function buildDemandCase(matter: Matter, options: BuildOptions = {}): Crm
   }
 
   /*
-   * Firm rule: a demand letter case is not opened until the fee is paid in
-   * full. Enforced here rather than left to memory, because a case opened
-   * early sits in Demand Letters looking like unpaid work.
+   * Firm rule, for demand letters only: the case is not opened until the flat
+   * fee is paid in full. Enforced here rather than left to memory, because a
+   * case opened early sits in Demand Letters looking like unpaid work.
+   *
+   * Criminal and PI matters take retainers, partial payments and payment
+   * plans; they are billed through the CRM's own billing fields and payments
+   * collection, which this module never writes.
    */
   if (amountPaid === '' && !options.allowUnpaid) {
     throw new CrmError(
