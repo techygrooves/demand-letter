@@ -46,6 +46,17 @@ one matter and every other collection empty:
 `prosecutor`, `emergency` and `billing` are written blank, exactly as the CRM's
 own "New demand letter" form writes them.
 
+## Firm rule: paid in full first
+
+**A demand letter case is not opened in the CRM until the fee is paid in
+full.** The tool enforces this: without a fee it refuses to build the file and
+says so. `--allow-unpaid` overrides it deliberately, for the rare case where a
+record is needed before the money lands.
+
+The reason is that `amountPaid` is what the Demand Letters screen counts. A
+case opened early shows as an open letter with no fee against it, which reads
+as unpaid work rather than work not yet started.
+
 ## Where the money goes, and why it matters
 
 **The fee goes in `amountPaid` on the matter. No `payments` record is
@@ -75,6 +86,7 @@ Two consequences:
 | `--sent <date>` | Date the letter went out, `YYYY-MM-DD` |
 | `--drive <url>` | The client's Demand Letters folder |
 | `--status <s>` | `Active` (default) or `Closed` |
+| `--allow-unpaid` | Open a case with no fee recorded (overrides the firm rule) |
 | `-o, --out <dir>` | Where to write it (default `drafts/`) |
 | `-p, --print` | Also print the JSON |
 
@@ -82,10 +94,7 @@ Command-line values override the matter file, so one matter file serves a case
 as it moves along instead of being rewritten at each step:
 
 ```bash
-# Case comes in — opened, no fee yet
-npm run crm -- -m matters/2026-014.json
-
-# Fee paid and letter issued
+# Fee paid in full, letter issued — the normal case
 npm run crm -- -m matters/2026-014.json --fee 500 --sent 2026-11-05 \
   --drive https://drive.google.com/drive/folders/…
 ```
@@ -104,7 +113,8 @@ Rather than write a record that imports cleanly and then displays wrongly:
 - a status other than `Active` or `Closed`, or `Closed` with no `dateClosed`;
 - a `driveUrl` that is not `https://`;
 - a fee it would have to guess at (`five hundred`, `500 USD`);
-- a fee with no date to count it in.
+- a fee with no date to count it in;
+- no fee at all, unless `--allow-unpaid` is passed.
 
 ## Verified against the live app
 

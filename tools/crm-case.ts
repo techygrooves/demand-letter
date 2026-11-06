@@ -25,12 +25,13 @@ interface Options {
   sent?: string;
   drive?: string;
   status?: string;
+  allowUnpaid: boolean;
   print: boolean;
   help: boolean;
 }
 
 function parseArgs(argv: string[]): Options {
-  const options: Options = { out: join(REPO, 'drafts'), print: false, help: false };
+  const options: Options = { out: join(REPO, 'drafts'), allowUnpaid: false, print: false, help: false };
 
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i]!;
@@ -48,6 +49,7 @@ function parseArgs(argv: string[]): Options {
       case '--sent': options.sent = value(); break;
       case '--drive': options.drive = value(); break;
       case '--status': options.status = value(); break;
+      case '--allow-unpaid': options.allowUnpaid = true; break;
       case '--print': case '-p': options.print = true; break;
       case '--help': case '-h': options.help = true; break;
       default: throw new Error(`Unknown option "${arg}". Try --help.`);
@@ -69,6 +71,8 @@ Options
                        the fee in the month of this date.
       --drive <url>    Link to the client's Demand Letters folder in Drive.
       --status <s>     Active (default) or Closed.
+      --allow-unpaid   Open a case with no fee recorded. A case is normally
+                       opened only once the fee is paid in full.
   -o, --out <dir>      Where to write it (default: drafts/)
   -p, --print          Also print the JSON
   -h, --help           This message
@@ -108,7 +112,7 @@ function main(): void {
     ...(options.status !== undefined ? { crmStatus: options.status } : {}),
   };
 
-  const bundle = buildDemandCase(withOverrides);
+  const bundle = buildDemandCase(withOverrides, { allowUnpaid: options.allowUnpaid });
   const record = bundle.matters[0]!;
   const json = `${JSON.stringify(bundle, null, 2)}\n`;
 
@@ -123,7 +127,8 @@ function main(): void {
   for (const line of describeCase(record)) console.log(`  ${line}`);
   console.log('\nIn the CRM: Merge (add only) — not Import (replace all).');
   if (record.amountPaid === '') {
-    console.log(`No fee recorded. Add --fee ${standardFee} once the money has arrived.`);
+    console.log(`No fee recorded (--allow-unpaid). The firm rule is to open a case only once`);
+    console.log(`the fee is paid in full: normally --fee ${standardFee}.`);
   }
   if (!record.driveUrl) {
     console.log('No Drive folder linked. Add --drive <url> to join the case to its folder.');

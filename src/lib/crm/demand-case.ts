@@ -114,6 +114,11 @@ export interface BuildOptions {
   id?: string;
   /** Overrides "now", for reproducible output in tests. */
   now?: Date;
+  /**
+   * Opens a case with no fee recorded. Off by default: see the firm rule in
+   * `buildDemandCase`.
+   */
+  allowUnpaid?: boolean;
 }
 
 /**
@@ -147,6 +152,18 @@ export function buildDemandCase(matter: Matter, options: BuildOptions = {}): Crm
 
   if (status === 'Closed' && !dateClosed) {
     throw new CrmError('A Closed case needs "dateClosed".');
+  }
+
+  /*
+   * Firm rule: a demand letter case is not opened until the fee is paid in
+   * full. Enforced here rather than left to memory, because a case opened
+   * early sits in Demand Letters looking like unpaid work.
+   */
+  if (amountPaid === '' && !options.allowUnpaid) {
+    throw new CrmError(
+      'No fee recorded. A demand letter case is opened only once the fee is paid in full — ' +
+        'give "feePaid" (or --fee). Pass --allow-unpaid to override deliberately.',
+    );
   }
 
   /*

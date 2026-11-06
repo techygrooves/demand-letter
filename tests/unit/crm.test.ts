@@ -19,8 +19,12 @@ const base = {
 
 const matter = (extra: Record<string, unknown> = {}): Matter => parseMatter({ ...base, ...extra });
 
-const build = (extra: Record<string, unknown> = {}) =>
-  buildDemandCase(matter(extra), { id: 'fixedid1234567', now: new Date('2026-11-05T12:00:00Z') });
+const build = (extra: Record<string, unknown> = {}, allowUnpaid = true) =>
+  buildDemandCase(matter(extra), {
+    id: 'fixedid1234567',
+    now: new Date('2026-11-05T12:00:00Z'),
+    allowUnpaid,
+  });
 
 describe('splitName', () => {
   it('treats the last word as the surname', () => {
@@ -99,8 +103,14 @@ describe('buildDemandCase', () => {
     expect(bundle.payments).toEqual([]);
   });
 
-  it('leaves the fee empty until the money has arrived', () => {
+  it('leaves the fee empty when opening an unpaid case deliberately', () => {
     expect(build().matters[0]!.amountPaid).toBe('');
+  });
+
+  /* The firm opens a demand letter case only once the fee is paid in full. */
+  it('refuses to open a case with no fee unless told to', () => {
+    expect(() => build({}, false)).toThrow(/paid in full/);
+    expect(() => build({ feePaid: '500' }, false)).not.toThrow();
   });
 
   it('defaults dateOpened to today so a fee always lands in a month', () => {
